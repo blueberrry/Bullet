@@ -43,6 +43,8 @@ function App() {
       await initFonts() // expo
       setupRootStore().then(setRootStore)
     })()
+
+    // AsyncStorage.clear()
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
