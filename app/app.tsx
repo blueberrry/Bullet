@@ -19,6 +19,7 @@ import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { ErrorBoundary } from "./screens/error/error-boundary"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -43,6 +44,8 @@ function App() {
       await initFonts() // expo
       setupRootStore().then(setRootStore)
     })()
+
+    // AsyncStorage.clear()
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
@@ -59,10 +62,12 @@ function App() {
       <RootStoreProvider value={rootStore}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <ErrorBoundary catchErrors={"always"}>
-            <AppNavigator
-              initialState={initialNavigationState}
-              onStateChange={onNavigationStateChange}
-            />
+            <GestureHandlerRootView style={{ flex: 1, borderWidth: 10, borderColor: "blue" }}>
+              <AppNavigator
+                initialState={initialNavigationState}
+                onStateChange={onNavigationStateChange}
+              />
+            </GestureHandlerRootView>
           </ErrorBoundary>
         </SafeAreaProvider>
       </RootStoreProvider>
