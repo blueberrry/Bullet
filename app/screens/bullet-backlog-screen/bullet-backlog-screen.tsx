@@ -19,6 +19,7 @@ import { color, spacing } from "../../theme"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
+import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
 
 // TODO: Implement moment lib
 
@@ -263,35 +264,21 @@ export const BulletBacklogScreen: FC<StackScreenProps<NavigatorParamList, "bulle
     // TODO: If order null from pageData, calculate by timestamp.
     //       Create a function that assigned an iterative order value (1,2,3) based on earliest to latest dateCreated
 
-    // const renderItem = ({ item, index, drag, isActive }) => {
-    //   return (
-    //     <ScaleDecorator>
-    //       {/* <View> */}
-    //       <TouchableOpacity
-    //         onLongPress={drag}
-    //         style={{ backgroundColor: isActive ? "blue" : "grey" }}
-    //       >
-    //         {/* <Image source={{ uri: item.image }} style={IMAGE} /> */}
-    //         {/* <Text style={LIST_TEXT}>entry id: {item.id}</Text>
-    //   <Text style={LIST_TEXT}>entry status: {item.status}</Text>
-    //   <Text style={LIST_TEXT}>entry text: {item.text}</Text>
-    // <Text style={LIST_TEXT}>entry dateCreated: {item.dateCreated}</Text> */}
-    //         <BulletItem id={item.id} text={item.text} />
-    //       </TouchableOpacity>
-    //       {/* </View> */}
-    //     </ScaleDecorator>
-    //   )
-    // }
-
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item, index, drag, isActive }) => {
       return (
-        <View>
-          <Image source={{ uri: item.image }} style={IMAGE} />
-          <Text style={LIST_TEXT}>entry id: {item.id}</Text>
-          <Text style={LIST_TEXT}>entry status: {item.status}</Text>
-          <Text style={LIST_TEXT}>entry text: {item.text}</Text>
-          <Text style={LIST_TEXT}>entry dateCreated: {item.dateCreated}</Text>
-        </View>
+        <ScaleDecorator>
+          <TouchableOpacity
+            onLongPress={drag}
+            style={{ backgroundColor: isActive ? "blue" : "grey" }}
+          >
+            {/* <Image source={{ uri: item.image }} style={IMAGE} /> */}
+            {/* <Text style={LIST_TEXT}>entry id: {item.id}</Text>
+      <Text style={LIST_TEXT}>entry status: {item.status}</Text>
+      <Text style={LIST_TEXT}>entry text: {item.text}</Text>
+    <Text style={LIST_TEXT}>entry dateCreated: {item.dateCreated}</Text> */}
+            <BulletItem text={item.text} />
+          </TouchableOpacity>
+        </ScaleDecorator>
       )
     }
 
@@ -313,12 +300,18 @@ export const BulletBacklogScreen: FC<StackScreenProps<NavigatorParamList, "bulle
             />
 
             <View
-              style={{ flex: 1, width: "100%", height: "100%", borderWidth: 2, borderColor: "red" }}
+              style={{
+                flex: 1,
+                width: "100%",
+                height: "100%",
+                borderWidth: 2,
+                borderColor: "red",
+              }}
             >
-              <FlatList
+              {/* <FlatList
                 contentContainerStyle={FLAT_LIST}
                 // containerStyle={{ flex: 1, width: "100%", height: "100%" }}
-                data={bulletEntries}
+                data={[...bulletEntries]}
                 keyExtractor={(item) => String(item.id)}
                 renderItem={renderItem}
                 // onDragBegin={(x) => {
@@ -326,6 +319,18 @@ export const BulletBacklogScreen: FC<StackScreenProps<NavigatorParamList, "bulle
                 //   console.tron.log(`onDragBegin: ${x}`)
                 //   setX(x)
                 // }}
+              /> */}
+              <DraggableFlatList
+                // contentContainerStyle={FLAT_LIST}
+                containerStyle={{ flex: 1, width: "100%", height: "100%" }}
+                data={[...bulletEntries]}
+                keyExtractor={(item) => String(item.id)}
+                renderItem={renderItem}
+                onDragBegin={(x) => {
+                  console.log(`onDragBegin: ${x}`)
+                  console.tron.log(`onDragBegin: ${x}`)
+                  setX(x)
+                }}
               />
             </View>
 
