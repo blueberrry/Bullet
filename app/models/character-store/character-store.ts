@@ -14,6 +14,7 @@ export const CharacterStoreModel = types
   .extend(withEnvironment)
   .actions((self) => ({
     saveCharacters: (characterSnapshots: CharacterSnapshotOut[]) => {
+      debugger
       self.characters.replace(characterSnapshots)
     },
   }))

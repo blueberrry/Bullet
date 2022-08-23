@@ -46,7 +46,7 @@ const ALL_DAYS_INITIAL_IDS = [
 
 const ALL_DAYS_INITIAL_DATA = [
   {
-    dayId: ALL_DAYS_INITIAL_IDS[0], // TODO: Or Date.now()/day()
+    id: ALL_DAYS_INITIAL_IDS[0], // TODO: Or Date.now()/day()
     date: "day",
     dailyEntries: [
       { entryId: "", dayPriorityRanking: null, migrated: false },
@@ -55,7 +55,7 @@ const ALL_DAYS_INITIAL_DATA = [
     ],
   },
   {
-    dayId: ALL_DAYS_INITIAL_IDS[1],
+    id: ALL_DAYS_INITIAL_IDS[1],
     date: "day",
     dailyEntries: [
       { entryId: "", dayPriorityRanking: null, migrated: false },
@@ -65,7 +65,7 @@ const ALL_DAYS_INITIAL_DATA = [
     ],
   },
   {
-    dayId: ALL_DAYS_INITIAL_IDS[2],
+    id: ALL_DAYS_INITIAL_IDS[2],
     date: "day",
     dailyEntries: [
       { entryId: "", dayPriorityRanking: null, migrated: false },
@@ -74,7 +74,7 @@ const ALL_DAYS_INITIAL_DATA = [
     ],
   },
   {
-    dayId: ALL_DAYS_INITIAL_IDS[3],
+    id: ALL_DAYS_INITIAL_IDS[3],
     date: "day",
     dailyEntries: [
       { entryId: "", dayPriorityRanking: null, migrated: false },
@@ -91,23 +91,23 @@ const TEMP_DAY_ID = "ac5f2861-4a9e-42ce-b4f5-c06f21b84dfd"
 // TODO: Change ID to Id
 
 // Get this day data from ALL_DAYS (ALL_DAYS_INITIAL_DATA[0])
-const getThisDay = (dayID, allDays) => {
+const getThisDay = (dayId, allDays) => {
   let thisDay = {} // TODO: types
   if (allDays.length > 0) {
-    thisDay = allDays.find((day) => day.dayID === dayID)
+    thisDay = allDays.find((day) => day.dayId === dayId)
   }
   return thisDay
 }
 
 // Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].dailyEntries)
-const getThisDaysEntryIDs = (thisDay) => {
-  let dayIDsArray = []
-  dayIDsArray = thisDay.items.map((item) => item.entryID)
-  return dayIDsArray
+const getThisDaysEntryIds = (thisDay) => {
+  let dayIdsArray = []
+  dayIdsArray = thisDay.items.map((item) => item.entryID)
+  return dayIdsArray
 }
 
 // Create a new array by filtering ALL_ENTRIES with current days ids
-const getEntriesDromDayIDs = (allBulletEntries, thisDaysEntryIds) => {
+const getEntriesDromDayIds = (allBulletEntries, thisDaysEntryIds) => {
   const dailyEntries = allBulletEntries.filter((entry, index) => {
     if (thisDaysEntryIds.includes(entry.id)) {
       return entry
@@ -168,8 +168,8 @@ const addRankingAfterSort = (entriesOldToNew) => {
 // TODO: Create dailystore with expanded vals (see notebook)
 // order  then fall back to timestamp
 
-export const BulletBacklogScreen: FC<StackScreenProps<NavigatorParamList, "bulletBacklog">> =
-  observer(({ navigation }) => {
+export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBacklog">> = observer(
+  ({ navigation }) => {
     const goBack = () => navigation.goBack()
 
     const { bulletEntriesStore, allDaysStore } = useStores()
@@ -346,7 +346,8 @@ export const BulletBacklogScreen: FC<StackScreenProps<NavigatorParamList, "bulle
         </View>
       </>
     )
-  })
+  },
+)
 
 const FULL: ViewStyle = {
   flex: 1,

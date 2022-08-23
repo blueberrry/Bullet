@@ -10,7 +10,9 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { WelcomeScreen, DemoScreen, DemoListScreen } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
-import { BulletBacklogScreen } from "../screens/bullet-backlog-screen/bullet-backlog-screen"
+import { DailyList } from "../screens/daily-list/daily-list"
+import { BulletBacklog } from "../screens/bullet-backlog/bullet-backlog"
+import { HomeScreen } from "../screens/home-screen/home-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -28,7 +30,9 @@ export type NavigatorParamList = {
   welcome: undefined
   demo: undefined
   demoList: undefined
+  homeScreen: undefined
   bulletBacklog: undefined
+  dailyList: { id: string }
   // 🔥 Your screens go here
 }
 
@@ -46,7 +50,9 @@ const AppStack = () => {
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="demo" component={DemoScreen} />
       <Stack.Screen name="demoList" component={DemoListScreen} />
-      <Stack.Screen name="bulletBacklog" component={BulletBacklogScreen} />
+      <Stack.Screen name="homeScreen" component={HomeScreen} />
+      <Stack.Screen name="bulletBacklog" component={BulletBacklog} />
+      <Stack.Screen name="dailyList" component={DailyList} />
       {/** 🔥 Your screens go here */}
     </Stack.Navigator>
   )
