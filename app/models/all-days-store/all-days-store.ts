@@ -1,7 +1,7 @@
 import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import { BulletEntryApi } from "../../services/api/bullet-entry-api"
 import { withEnvironment } from "../extensions/with-environment"
-import { DayModel, DaySnapshotOut } from "../all-days-day/all-days-day"
+import { DayModel, DaySnapshotIn, DaySnapshotOut } from "../all-days-day/all-days-day"
 import { AllDaysApi } from "../../services/api/all-days-api"
 /**
  * All Days store
@@ -14,6 +14,11 @@ export const AllDaysStoreModel = types
   .extend(withEnvironment)
   .actions((self) => ({
     saveAllDays: (allDaysSnapshot: DaySnapshotOut[]) => {
+      // console.tron.log(
+      //   "🚀 ~ file: all-days-store.ts ~ line 17 ~ .actions ~ allDaysSnapshot",
+      //   allDaysSnapshot,
+      // )
+
       self.allDays.replace(allDaysSnapshot)
     },
   }))
@@ -34,7 +39,3 @@ export interface AllDaysStore extends Instance<typeof AllDaysStoreModel> {}
 export interface DayStoreSnapshotOut extends SnapshotOut<typeof AllDaysStoreModel> {}
 export interface DayStoreSnapshotIn extends SnapshotIn<typeof AllDaysStoreModel> {}
 export const createDayStoreDefaultModel = () => types.optional(AllDaysStoreModel, {})
-
-
-
-

@@ -166,6 +166,12 @@ export const DemoScreen: FC<StackScreenProps<NavigatorParamList, "demo">> = obse
           <Button
             style={DEMO}
             textStyle={DEMO_TEXT}
+            text="Home"
+            onPress={() => navigation.navigate("homeScreen")}
+          />
+          <Button
+            style={DEMO}
+            textStyle={DEMO_TEXT}
             tx="demoScreen.demoList"
             onPress={() => navigation.navigate("demoList")}
           />
@@ -174,6 +180,12 @@ export const DemoScreen: FC<StackScreenProps<NavigatorParamList, "demo">> = obse
             textStyle={DEMO_TEXT}
             text="Demo all items"
             onPress={() => navigation.navigate("bulletBacklog")}
+          />
+          <Button
+            style={DEMO}
+            textStyle={DEMO_TEXT}
+            text="Daily list"
+            onPress={() => navigation.navigate("dailyList")}
           />
           <Image source={logoIgnite} style={IGNITE} />
           <View style={LOVE_WRAPPER}>
