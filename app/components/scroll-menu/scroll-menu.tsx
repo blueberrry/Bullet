@@ -1,6 +1,6 @@
 import moment from "moment"
 import React from "react"
-import { FlatList, TouchableOpacity, View } from "react-native"
+import { FlatList, TouchableOpacity, View, ViewStyle } from "react-native"
 import { getEntriesForSelectedDateSpan } from "../../utils/get-entries-for-selected-datespan"
 import { Text } from "../../components/text/text"
 import { useGetEntriesByMigrated } from "../../hooks/useGetEntriesByMigrated"
@@ -8,12 +8,14 @@ import { useGetEntriesByStatus } from "../../hooks/useGetEntriesByStatus"
 import CircularProgress from "react-native-circular-progress-indicator"
 import { AntDesign, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
 import {
+  DELETE_BTN_STYLES,
   HORIZONTAL_SCROLL_MENU_STYLES,
   PREVIEW_CONTAINER_STYLE,
   PREVIEW_ITEMS_CONTAINER_STYLES,
   PREVIEW_ITEM_CONTAINER_STYLES,
   PREVIEW_ITEM_STYLES,
   PROGRESS_CONTAINER_STYLES,
+  RELATIVE_WRAPPER_STYLE,
   SCROLL_MENU_ADD_BTN_CONTAINER_STYLES,
   SCROLL_MENU_BTN_STYLES,
   SCROLL_MENU_PROGRESS_STYLES,
@@ -28,19 +30,22 @@ import { Button } from "../button/button"
  **/
 
 export const ScrollMenu = (props: ScrollMenuProps) => {
-  const { entries, allBulletEntries, navigateToScreen, addDate } = props
+  const { entries, allBulletEntries, navigateToScreen, addDate, removeDate } = props
 
   const renderItem = ({ item }) => {
     return (
-      <ScrollMenuBtn
-        onMenuBtnPress={() => {
-          navigateToScreen(item.id)
-        }}
-        id={item.id}
-        date={item.date}
-        entries={item.dailyEntries}
-        allEntries={allBulletEntries}
-      />
+      <View style={RELATIVE_WRAPPER_STYLE}>
+        <Button text="delete" style={DELETE_BTN_STYLES} onPress={() => removeDate(item.date)} />
+        <ScrollMenuBtn
+          onMenuBtnPress={() => {
+            navigateToScreen(item.id)
+          }}
+          id={item.id}
+          date={item.date}
+          entries={item.dailyEntries}
+          allEntries={allBulletEntries}
+        />
+      </View>
     )
   }
 

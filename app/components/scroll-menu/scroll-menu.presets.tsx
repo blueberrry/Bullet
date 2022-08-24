@@ -8,6 +8,10 @@ export const HORIZONTAL_SCROLL_MENU_STYLES: ViewStyle = { width: "100%", backgro
 
 export const PREVIEW_CONTAINER_STYLE: ViewStyle = { flex: 1 }
 
+export const RELATIVE_WRAPPER_STYLE: ViewStyle = { position: "relative" }
+
+export const DELETE_BTN_STYLES: ViewStyle = { position: "absolute", zIndex: 5, right: -5 }
+
 export const SCROLL_MENU_ADD_BTN_CONTAINER_STYLES: ViewStyle = {
   flex: 1,
   width: 200,

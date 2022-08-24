@@ -7,6 +7,7 @@ export interface ScrollMenuProps {
   allBulletEntries?: BulletEntryStoreSnapshotIn[]
   navigateToScreen: (id: string) => void
   addDate: () => void
+  removeDate: (date: Day["date"]) => void
 }
 
 export interface ScrollMenuBtnProps {

@@ -52,14 +52,13 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
 
     // TODO: Data is not persisting in async storage - looks like it's overwritten when we fetch the dummy data
 
-    // TODO: Scroll to end of view when adding next day
+    // TODO: Add day btn should open menu with + day or + date
 
     // TODO: Sould this be an action in store?
     const addNextDay = () => {
       const highestDateString = getHighestDate(allDays)
       const nextDate = moment(highestDateString).add(1, "days").format("YYYYMMDD")
 
-      console.tron.log("🚀 ~ file: home-screen.tsx ~ line 370 ~ addNextDay ~ uuidv4", uuidv4())
       const newDaysData = [
         ...allDays,
         {
@@ -77,8 +76,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
       allDaysStore.saveAllDays(newDaysData)
     }
 
-    const removeNextDay = () => {
-      const newDaysData = allDays.filter((day) => day.id !== "7cb2accf-5f3b-4a84-993c-6cc795bec98d")
+    const removeSpecificDay = (date) => {
+      const newDaysData = allDays.filter((day) => day.date !== date)
       allDaysStore.saveAllDays(newDaysData)
     }
 
@@ -87,16 +86,27 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
         <ScrollView>
           <View>
             <Text>Daily Entries</Text>
-
             <ScrollMenu
               entries={[...allDays]}
               allBulletEntries={bulletEntries}
               navigateToScreen={navigateToDay}
               addDate={addNextDay}
+              removeDate={removeSpecificDay}
             />
             <Button text="Get/reset initial testing state" onPress={fetchTempInitialData} />
             <Button text="Add next day" onPress={addNextDay} />
-            <Button text="Remove next day" onPress={removeNextDay} />
+          </View>
+          <View>
+            <Text>Weeklies</Text>
+            {/* <ScrollMenu
+              entries={[...allDays]}
+              allBulletEntries={bulletEntries}
+              navigateToScreen={navigateToDay}
+              addDate={addNextDay}
+              removeDate={removeSpecificDay}
+            />
+            <Button text="Get/reset initial testing state" onPress={fetchTempInitialData} />
+            <Button text="Add next day" onPress={addNextDay} /> */}
           </View>
         </ScrollView>
       </SafeAreaView>
