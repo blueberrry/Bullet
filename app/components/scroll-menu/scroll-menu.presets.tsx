@@ -1,6 +1,8 @@
 import { TextStyle, ViewStyle } from "react-native"
 import { spacing } from "../../theme"
 
+// TODO: THis should look more like the others
+
 /**
  * All text will start off looking like this.
  */
