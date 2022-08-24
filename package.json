@@ -51,6 +51,7 @@
     "react-native-circular-progress-indicator": "^4.4.0",
     "react-native-draggable-flatlist": "^3.1.2",
     "react-native-gesture-handler": "~2.5.0",
+    "react-native-get-random-values": "~1.8.0",
     "react-native-keychain": "8.0.0",
     "react-native-progress-circle": "^2.1.0",
     "react-native-reanimated": "~2.9.1",
@@ -61,6 +62,7 @@
     "reactotron-react-js": "^3.3.7",
     "reactotron-react-native": "5.0.2",
     "remove": "^0.1.5",
+    "uuid": "^8.3.2",
     "validate.js": "0.13.1",
     "yarn": "^1.22.19"
   },

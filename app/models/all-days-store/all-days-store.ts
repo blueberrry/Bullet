@@ -3,6 +3,7 @@ import { BulletEntryApi } from "../../services/api/bullet-entry-api"
 import { withEnvironment } from "../extensions/with-environment"
 import { DayModel, DaySnapshotIn, DaySnapshotOut } from "../all-days-day/all-days-day"
 import { AllDaysApi } from "../../services/api/all-days-api"
+import { INITIAL_ALL_DAYS } from "../initial-data/initial-data"
 /**
  * All Days store
  */
@@ -19,7 +20,7 @@ export const AllDaysStoreModel = types
       //   allDaysSnapshot,
       // )
 
-      self.allDays.replace(allDaysSnapshot)
+      self.allDays.replace(allDaysSnapshot) // TODO: Fix this
     },
   }))
   .actions((self) => ({
@@ -31,6 +32,14 @@ export const AllDaysStoreModel = types
         self.saveAllDays(result.allDays)
       } else {
         __DEV__ && console.tron.log(result.kind)
+      }
+    },
+  }))
+  .actions((self) => ({
+    getInitialAllDaysForTesting: () => {
+      // Here we are saying that if we have no data/initial data only, we should save our hard coded initial entries for testing
+      if (self.allDays.length < 3) {
+        self.allDays.replace(INITIAL_ALL_DAYS.results)
       }
     },
   }))
