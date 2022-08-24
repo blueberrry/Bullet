@@ -8,15 +8,23 @@ export const HORIZONTAL_SCROLL_MENU_STYLES: ViewStyle = { width: "100%", backgro
 
 export const PREVIEW_CONTAINER_STYLE: ViewStyle = { flex: 1 }
 
-export const SCROLL_MENU_BTN_STYLES: ViewStyle = {
+export const SCROLL_MENU_ADD_BTN_CONTAINER_STYLES: ViewStyle = {
+  flex: 1,
   width: 200,
   height: 300,
   margin: 10,
+  padding: spacing[3],
+  justifyContent: "center",
+  alignItems: "center",
+}
+
+export const SCROLL_MENU_BTN_STYLES: ViewStyle = {
+  ...SCROLL_MENU_ADD_BTN_CONTAINER_STYLES,
   backgroundColor: "green",
   borderWidth: 2,
   borderColor: "blue",
   borderRadius: 20,
-  padding: spacing[3],
+  alignItems: "flex-start",
 }
 
 export const PREVIEW_ITEMS_CONTAINER_STYLES: ViewStyle = {

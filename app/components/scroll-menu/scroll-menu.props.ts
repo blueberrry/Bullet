@@ -1,17 +1,18 @@
 import { StyleProp, TextStyle } from "react-native"
-import { Day } from "../../models/all-days-day/all-days-day"
+import { DailyEntriesSnapshotIn, Day, DaySnapshotIn } from "../../models/all-days-day/all-days-day"
 import { BulletEntryStoreSnapshotIn } from "../../models/bullet-entries-store/bullet-entries-store"
 
 export interface ScrollMenuProps {
-  data: Array<object>
+  entries: DaySnapshotIn[] // || Week || Month?
   allBulletEntries?: BulletEntryStoreSnapshotIn[]
   navigateToScreen: (id: string) => void
+  addDate: () => void
 }
 
 export interface ScrollMenuBtnProps {
-  id: string
+  id: Day["id"]
   date: Day["date"]
-  entries: any // DailyEntries[] & BulletEntriesStore[] //TODO: This
+  entries: DailyEntriesSnapshotIn[] // DailyEntries[] & BulletEntriesStore[] //TODO: This
   allEntries?: any[] // TODO
   onMenuBtnPress: () => void
 }

@@ -1,9 +1,6 @@
 import moment from "moment"
 import React from "react"
-import { FlatList, StyleProp, TextStyle, TouchableOpacity, View } from "react-native"
-import { Day } from "../../models/all-days-day/all-days-day"
-import { BulletEntriesStore } from "../../models/bullet-entries-store/bullet-entries-store"
-import { spacing } from "../../theme"
+import { FlatList, TouchableOpacity, View } from "react-native"
 import { getEntriesForSelectedDateSpan } from "../../utils/get-entries-for-selected-datespan"
 import { Text } from "../../components/text/text"
 import { useGetEntriesByMigrated } from "../../hooks/useGetEntriesByMigrated"
@@ -17,10 +14,12 @@ import {
   PREVIEW_ITEM_CONTAINER_STYLES,
   PREVIEW_ITEM_STYLES,
   PROGRESS_CONTAINER_STYLES,
+  SCROLL_MENU_ADD_BTN_CONTAINER_STYLES,
   SCROLL_MENU_BTN_STYLES,
   SCROLL_MENU_PROGRESS_STYLES,
 } from "./scroll-menu.presets"
 import { ScrollMenuProps, ScrollMenuBtnProps, ScrollMenuProgressProps } from "./scroll-menu.props"
+import { Button } from "../button/button"
 
 /**
  *
@@ -29,7 +28,7 @@ import { ScrollMenuProps, ScrollMenuBtnProps, ScrollMenuProgressProps } from "./
  **/
 
 export const ScrollMenu = (props: ScrollMenuProps) => {
-  const { data, allBulletEntries, navigateToScreen } = props
+  const { entries, allBulletEntries, navigateToScreen, addDate } = props
 
   const renderItem = ({ item }) => {
     return (
@@ -47,13 +46,18 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
 
   return (
     <FlatList
-      data={[...data]}
+      data={[...entries]}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
       horizontal={true}
       style={HORIZONTAL_SCROLL_MENU_STYLES}
       contentContainerStyle={{}}
       extraData={allBulletEntries}
+      ListFooterComponent={
+        <View style={SCROLL_MENU_ADD_BTN_CONTAINER_STYLES}>
+          <Button text="+" onPress={addDate} />
+        </View>
+      }
     />
   )
 }

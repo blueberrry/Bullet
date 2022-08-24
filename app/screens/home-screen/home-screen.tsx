@@ -54,7 +54,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
 
     // TODO: Scroll to end of view when adding next day
 
-    const addNextDay = (newEntry = undefined) => {
+    // TODO: Sould this be an action in store?
+    const addNextDay = () => {
       const highestDateString = getHighestDate(allDays)
       const nextDate = moment(highestDateString).add(1, "days").format("YYYYMMDD")
 
@@ -88,9 +89,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
             <Text>Daily Entries</Text>
 
             <ScrollMenu
-              data={[...allDays]}
+              entries={[...allDays]}
               allBulletEntries={bulletEntries}
               navigateToScreen={navigateToDay}
+              addDate={addNextDay}
             />
             <Button text="Get/reset initial testing state" onPress={fetchTempInitialData} />
             <Button text="Add next day" onPress={addNextDay} />
