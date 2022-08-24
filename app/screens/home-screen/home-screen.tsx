@@ -1,75 +1,183 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import moment from "moment"
-import React, { FC, useEffect, useState } from "react"
+import React, { CSSProperties, FC, useEffect, useState } from "react"
 import { ScrollView, TouchableOpacity, FlatList, View } from "react-native"
 import ProgressCircle from "react-native-progress-circle"
+import CircularProgress from "react-native-circular-progress-indicator"
 import { useStores } from "../../models"
 import { DailyEntries, Day } from "../../models/all-days-day/all-days-day"
 import { BulletEntriesStore } from "../../models/bullet-entries-store/bullet-entries-store"
 import { NavigatorParamList } from "../../navigators/app-navigator"
 import { Text } from "../../components/text/text"
 import { spacing } from "../../theme/spacing"
+import { AntDesign, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
 
 interface ScrollMenuPreviewProps {
   children?: React.ReactNode
-  hasProgress?: boolean
-  progressPercentage?: number
+  completed?: number
+  total?: number
 }
 
-const ScrollMenuPreview = (props: ScrollMenuPreviewProps) => {
-  const { children, hasProgress, progressPercentage = 50 } = props
+const ScrollMenuProgress = (props: ScrollMenuPreviewProps) => {
+  const { children, completed = 1, total = 1 } = props
   return (
-    <View>
-      {/* <ProgressCircle
-        percent={hasProgress ? progressPercentage : 100}
-        radius={50}
-        borderWidth={8}
-        color="#3399FF"
-        shadowColor="#999"
-        bgColor="#fff"
-      >
-        {children}
-      </ProgressCircle> */}
-    </View>
+    <CircularProgress
+      value={completed}
+      radius={50}
+      duration={2000}
+      progressValueColor={"#ecf0f1"}
+      maxValue={total}
+      title={`${completed}/${total} ✅`}
+      showProgressValue={false}
+      titleColor={"white"}
+      titleStyle={{ fontWeight: "normal", fontSize: 17 }}
+    />
   )
+}
+
+const PROGRESS_CONTAINER_STYLES = {
+  marginTop: spacing[2],
+  backgroundColor: "red",
+  // flexDirection: "row",
+  alignItems: "center",
+  paddingVertical: spacing[1],
+  flex: 1,
+}
+
+const OTHER_PREVIEW_ITEMS_CONTAINER_STYLES = {
+  flex: 1,
+  backgroundColor: "pink",
+  height: "auto",
+  borderWidth: 2,
+  borderColor: "red",
+  flexDirection: "row",
+  flexWrap: "wrap",
+}
+
+const PREVIEW_ITEM_CONTAINER_STYLES = {
+  width: "50%",
+  height: "50%",
+  // borderWidth: 2,
+  // borderColor: "red",
+  // margin: spacing[1],
+  padding: spacing[1],
+  // backgroundColor: "blue",
+}
+
+const PREVIEW_ITEM_STYLES = {
+  padding: spacing[1],
+  flexDirection: "row",
+  backgroundColor: "blue",
+  flex: 1,
+  justifyContent: "space-around",
+}
+
+const useGetEntriesByMigrated = (entries) => {
+  const entriesNotMigrated = entries.filter((entry) => entry.migrated === false)
+  const entriesMigrated = entries.filter((entry) => entry.migrated === true)
+  const entriesMigratedTotal = entriesMigrated.length
+
+  return {
+    entriesNotMigrated,
+    entriesMigrated,
+    entriesMigratedTotal,
+  }
+}
+
+const useGetEntriesByStatus = (entries) => {
+  // TODO: Union type
+  // TODO: Should this all be in a useEffect ?
+  const todos = entries.filter((entry) => entry.status === "todo")
+  const todosTotal = todos.length
+
+  const completed = entries.filter((entry) => entry.status === "completed")
+  const completedTotal = completed.length
+
+  const allTodosTotal = todosTotal + completedTotal
+
+  const percentageTodosCompleted = (completedTotal / allTodosTotal) * 100
+
+  const notes = entries.filter((entry) => entry.status === "notes")
+  const notesTotal = notes.length
+
+  const inspirationalIdeas = entries.filter((entry) => entry.status === "inspirationalIdeas")
+  const inspirationalIdeasTotal = inspirationalIdeas.length
+
+  return {
+    todos,
+    todosTotal,
+    completed,
+    completedTotal,
+    allTodosTotal,
+    percentageTodosCompleted,
+    notes,
+    notesTotal,
+    inspirationalIdeas,
+    inspirationalIdeasTotal,
+  }
 }
 
 const ScrollMenuPreviewContainer = (props) => {
   // TODO: prop type
-  const { entries: allEntries } = props
+  const { entries } = props
 
-  const allTodos = allEntries.filter((entry) => entry.status === "todo")
-  const noAllTodos = allTodos.length
+  const { entriesNotMigrated, entriesMigrated, entriesMigratedTotal } =
+    useGetEntriesByMigrated(entries)
 
-  const allCompleted = allEntries.filter((entry) => entry.status === "completed")
-  const noAllCompleted = allCompleted.length
+  const {
+    todos,
+    todosTotal,
+    completed,
+    completedTotal,
+    allTodosTotal,
+    percentageTodosCompleted,
+    notes,
+    notesTotal,
+    inspirationalIdeas,
+    inspirationalIdeasTotal,
+  } = useGetEntriesByStatus(entriesNotMigrated)
 
-  const totalTodos = noAllTodos + noAllCompleted
+  // TODO: This logic could be extracted to a hook or live as actions in the store.
+  //       It's probably best as local state maybe unless we need to merge in the same way for the screen.
 
-  const percenttageCompleted = (noAllCompleted / totalTodos) * 100
-
-  const allNotes = allEntries.filter((entry) => entry.status === "notes")
-  const noAllNotes = allNotes.length
-
-  const allInspirationalIdeas = allEntries.filter((entry) => entry.status === "inspirationalIdeas")
-  const noAllInspirationalIdeas = allInspirationalIdeas.length
   return (
-    <View>
-      <ScrollMenuPreview
-        hasProgress={true}
-        progressPercentage={percenttageCompleted}
-      ></ScrollMenuPreview>
-      <ScrollMenuPreview></ScrollMenuPreview>
-      <ScrollMenuPreview></ScrollMenuPreview>
-      <ScrollMenuPreview></ScrollMenuPreview>
-
-      {/* <Text>{date}</Text>
-      <Text>{`no of entries ${entries.length}`}</Text> */}
+    <View style={{ flex: 1 }}>
+      <View style={PROGRESS_CONTAINER_STYLES}>
+        <ScrollMenuProgress completed={completedTotal} total={allTodosTotal}></ScrollMenuProgress>
+        {/* <Text preset="secondary">Tasks completed</Text> */}
+      </View>
+      <View style={OTHER_PREVIEW_ITEMS_CONTAINER_STYLES}>
+        <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
+          <View style={PREVIEW_ITEM_STYLES}>
+            <AntDesign name="checksquareo" size={22} color="black" />
+            <Text>{`${percentageTodosCompleted}%`}</Text>
+          </View>
+        </View>
+        <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
+          <View style={PREVIEW_ITEM_STYLES}>
+            <MaterialCommunityIcons name="content-save-move" size={24} color="black" />
+            <Text>{entriesMigratedTotal}</Text>
+          </View>
+        </View>
+        <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
+          <View style={PREVIEW_ITEM_STYLES}>
+            <FontAwesome5 name="sticky-note" size={24} color="black" />
+            <Text>{notesTotal}</Text>
+          </View>
+        </View>
+        <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
+          <View style={PREVIEW_ITEM_STYLES}>
+            <FontAwesome5 name="lightbulb" size={24} color="black" />
+            <Text>{inspirationalIdeasTotal}</Text>
+          </View>
+        </View>
+      </View>
     </View>
   )
 }
 
+// Should be re-useable and work for weeklies/monthlies data too
 const getEntriesForSelectedDateSpan = (allBulletEntries, entriesForThisDate) => {
   debugger
   if (allBulletEntries.length > 0 && entriesForThisDate.length > 0) {
@@ -112,7 +220,6 @@ const SCROLL_MENU_BTN_STYLES = {
 }
 
 const ScrollMenuBtnDate = ({ date }) => {
-  console.tron.log("🚀 ~ file: home-screen.tsx ~ line 77 ~ ScrollMenuBtnDate ~ date", date)
   const day = moment(date).format("dddd")
   const dateText = moment().format("Do MMMM YYYY")
   return (
@@ -127,10 +234,6 @@ const ScrollMenuBtn = (props: ScrollMenuBtnProps) => {
   const { id, date, entries, allEntries, onMenuBtnPress } = props
 
   const entriesForThisDateSpan = getEntriesForSelectedDateSpan(allEntries, entries) // TODO: usememo
-  console.tron.log(
-    "🚀 ~ file: home-screen.tsx ~ line 78 ~ ScrollMenuBtn ~ entriesForThisDateSpan",
-    entriesForThisDateSpan,
-  )
 
   // TODO: Nice date header
   // TODO: Previews/Progress indicators for all 4 status:    todo, done, migrated, notes, inspirationalIdeas  -- add DONE
@@ -222,14 +325,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
 
       fetchData()
     }, [])
-
-    // useEffect(() => {
-    //   console.tron.log("🚀 ~ file: home-screen.tsx ~ line 77 ~ allDays", allDays)
-    // }, [allDays])
-
-    useEffect(() => {
-      console.tron.log("🚀 ~ file: home-screen.tsx ~ line 155 ~ bulletEntries", bulletEntries)
-    }, [bulletEntries])
 
     const navigateToDay = (id) => {
       navigation.navigate("dailyList", { id })
