@@ -1,10 +1,10 @@
 import { StyleProp, TextStyle } from "react-native"
 import { Day } from "../../models/all-days-day/all-days-day"
-import { BulletEntriesStore } from "../../models/bullet-entries-store/bullet-entries-store"
+import { BulletEntryStoreSnapshotIn } from "../../models/bullet-entries-store/bullet-entries-store"
 
-export interface HorizontalScrollMenuProps {
+export interface ScrollMenuProps {
   data: Array<object>
-  allBulletEntries?: BulletEntriesStore[]
+  allBulletEntries?: BulletEntryStoreSnapshotIn[]
   navigateToScreen: (id: string) => void
 }
 

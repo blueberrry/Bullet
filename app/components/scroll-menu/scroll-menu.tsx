@@ -20,11 +20,7 @@ import {
   SCROLL_MENU_BTN_STYLES,
   SCROLL_MENU_PROGRESS_STYLES,
 } from "./scroll-menu.presets"
-import {
-  HorizontalScrollMenuProps,
-  ScrollMenuBtnProps,
-  ScrollMenuProgressProps,
-} from "./scroll-menu.props"
+import { ScrollMenuProps, ScrollMenuBtnProps, ScrollMenuProgressProps } from "./scroll-menu.props"
 
 /**
  *
@@ -32,7 +28,7 @@ import {
  *
  **/
 
-export const HorizontalScrollMenu = (props: HorizontalScrollMenuProps) => {
+export const ScrollMenu = (props: ScrollMenuProps) => {
   const { data, allBulletEntries, navigateToScreen } = props
 
   const renderItem = ({ item }) => {
