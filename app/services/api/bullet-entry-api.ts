@@ -5,6 +5,8 @@ import { getGeneralApiProblem } from "./api-problem"
 
 const API_PAGE_SIZE = 50
 
+// !important this is not yet used but is needed for future enhancement
+// TODO: Keep for when backend is set up, for now we are using initial data with mobx persist
 export class BulletEntryApi {
   private api: Api
 
@@ -35,4 +37,3 @@ export class BulletEntryApi {
     }
   }
 }
-

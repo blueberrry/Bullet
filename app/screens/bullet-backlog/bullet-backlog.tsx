@@ -187,39 +187,14 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
     // TODO: Should we get this at a higher leve
     //       Surely the day component should only be passed the _days_ data as props and allEntries data
     //       We will getch initial day data here for now
-    useEffect(() => {
-      async function fetchData() {
-        await bulletEntriesStore.getBulletEntries()
-        // await allDaysStore.getAllDays()
-      }
-
-      fetchData()
-    }, [])
-
-    useEffect(() => {
-      if (bulletEntries.length > 0) {
-        console.tron.log(bulletEntries)
-      }
-    }, [bulletEntries])
 
     // useEffect(() => {
-    //   if (allDays.length > 0) {
-    //     console.log("day data --- ", JSON.stringify(allDays, null, 2))
-    //     console.tron.log("day data --- ", JSON.stringify(allDays, null, 2))
-    //   } else {
-    //     console.log("No day data ")
-    //     console.tron.log("No day data ")
+    //   function fetchTempInitialData() {
+    //     bulletEntriesStore.getInitialBulletEntriesForTesting()
     //   }
-    // }, [allDays])
 
-    // useEffect(() => {
-    //   if(bulletE
-    //     bulletEntries
-
-    //     // return () => {
-    //       //   second
-    //       // }
-    //     }, [bulletEntries])
+    //   fetchTempInitialData()
+    // }, [])
 
     const addBulletEntry = (newEntry = undefined) => {
       const newBulletEntries = [
@@ -246,21 +221,6 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
     // TODO: Bullet item shoudd be passed item.text only
     // TODO: Performance might be better with RecyclerListView, investigate
 
-    // const renderItem = ({ item }) => {
-    //   return (
-    //     <ScaleDecorator>
-    //       <View style={LIST_CONTAINER}>
-    //         {/* <Image source={{ uri: item.image }} style={IMAGE} /> */}
-    //         {/* <Text style={LIST_TEXT}>entry id: {item.id}</Text>
-    // <Text style={LIST_TEXT}>entry status: {item.status}</Text>
-    // <Text style={LIST_TEXT}>entry text: {item.text}</Text>
-    // <Text style={LIST_TEXT}>entry dateCreated: {item.dateCreated}</Text> */}
-    //         <BulletItem id={item.id} text={item.text} />
-    //       </View>
-    //     </ScaleDecorator>
-    //   )
-    // }
-
     // TODO: If order null from pageData, calculate by timestamp.
     //       Create a function that assigned an iterative order value (1,2,3) based on earliest to latest dateCreated
 
@@ -281,9 +241,6 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
         </ScaleDecorator>
       )
     }
-
-    // <Text>Hello</Text>
-    // <Text>{`Drag movement ${x}`}</Text>
 
     return (
       <>
@@ -308,18 +265,6 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
                 borderColor: "red",
               }}
             >
-              {/* <FlatList
-                contentContainerStyle={FLAT_LIST}
-                // containerStyle={{ flex: 1, width: "100%", height: "100%" }}
-                data={[...bulletEntries]}
-                keyExtractor={(item) => String(item.id)}
-                renderItem={renderItem}
-                // onDragBegin={(x) => {
-                //   console.log(`onDragBegin: ${x}`)
-                //   console.tron.log(`onDragBegin: ${x}`)
-                //   setX(x)
-                // }}
-              /> */}
               <DraggableFlatList
                 // contentContainerStyle={FLAT_LIST}
                 containerStyle={{ flex: 1, width: "100%", height: "100%" }}
@@ -327,7 +272,6 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
                 keyExtractor={(item) => String(item.id)}
                 renderItem={renderItem}
                 onDragBegin={(x) => {
-                  console.log(`onDragBegin: ${x}`)
                   console.tron.log(`onDragBegin: ${x}`)
                   setX(x)
                 }}

@@ -5,6 +5,7 @@ import React, { CSSProperties, FC, useEffect, useState } from "react"
 import { ScrollView, TouchableOpacity, FlatList, View } from "react-native"
 import ProgressCircle from "react-native-progress-circle"
 import CircularProgress from "react-native-circular-progress-indicator"
+import { v4 as uuidv4 } from "uuid"
 import { useStores } from "../../models"
 import { DailyEntries, Day } from "../../models/all-days-day/all-days-day"
 import { BulletEntriesStore } from "../../models/bullet-entries-store/bullet-entries-store"
@@ -12,6 +13,7 @@ import { NavigatorParamList } from "../../navigators/app-navigator"
 import { Text } from "../../components/text/text"
 import { spacing } from "../../theme/spacing"
 import { AntDesign, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
+import { Button } from "../../components/button/button"
 
 interface ScrollMenuPreviewProps {
   children?: React.ReactNode
@@ -96,7 +98,7 @@ const useGetEntriesByStatus = (entries) => {
 
   const allTodosTotal = todosTotal + completedTotal
 
-  const percentageTodosCompleted = (completedTotal / allTodosTotal) * 100
+  const percentageTodosCompleted = allTodosTotal > 0 ? (completedTotal / allTodosTotal) * 100 : 0
 
   const notes = entries.filter((entry) => entry.status === "notes")
   const notesTotal = notes.length
@@ -221,7 +223,7 @@ const SCROLL_MENU_BTN_STYLES = {
 
 const ScrollMenuBtnDate = ({ date }) => {
   const day = moment(date).format("dddd")
-  const dateText = moment().format("Do MMMM YYYY")
+  const dateText = moment(date).format("Do MMMM YYYY")
   return (
     <View>
       <Text preset="header">{day}</Text>
@@ -235,8 +237,6 @@ const ScrollMenuBtn = (props: ScrollMenuBtnProps) => {
 
   const entriesForThisDateSpan = getEntriesForSelectedDateSpan(allEntries, entries) // TODO: usememo
 
-  // TODO: Nice date header
-  // TODO: Previews/Progress indicators for all 4 status:    todo, done, migrated, notes, inspirationalIdeas  -- add DONE
   // TODO: Remaining items move to backlog/monthly at midnight, user should be notified of impending auto-migrate
   // TODO: Highlight current day with <TODAY> badge/pill on top
 
@@ -308,6 +308,12 @@ export const HorizontalScrollMenu = (props: HorizontalScrollMenuProps) => {
 
 // TODO: Create function to merge dailyEntries with their respective entry data from bulletEntries
 
+const getHighestDate = (allDays) => {
+  const datesArrayAsNumbers = allDays.map((day) => parseInt(day.date, 10))
+  const highestDate = Math.max(...datesArrayAsNumbers)
+  return highestDate.toString()
+}
+
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
@@ -317,17 +323,74 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
     const { allDays } = allDaysStore
 
     // Get all days on mount
-    useEffect(() => {
-      async function fetchData() {
-        await allDaysStore.getAllDays()
-        await bulletEntriesStore.getBulletEntries()
-      }
+    // useEffect(() => {
+    //   async function fetchData() {
+    //     await allDaysStore.getAllDays()
+    //     // await bulletEntriesStore.getInitialBulletEntriesForTesting()
+    //   }
 
-      fetchData()
-    }, [])
+    //   fetchData()
+    // }, [])
+
+    // TODO: Every time this screen mounts we're going to wipe out new data with hardcoded data just the same as the api call
+    // useEffect(() => {
+    //   function fetchTempInitialData() {
+    //     allDaysStore.getInitialAllDaysForTesting()
+    //     bulletEntriesStore.getInitialBulletEntriesForTesting()
+    //   }
+
+    //   fetchTempInitialData()
+    // }, [])
+
+    const fetchTempInitialData = () => {
+      allDaysStore.getInitialAllDaysForTesting()
+      bulletEntriesStore.getInitialBulletEntriesForTesting()
+    }
 
     const navigateToDay = (id) => {
       navigation.navigate("dailyList", { id })
+    }
+
+    // TODO: Migrate days entries to backlog if date is older than today
+    //       or it could be greyed out with user prompt to migrate days manually/migrate all to backlog/monthly
+    //       any dates older than yesterday should auto migrate to backlog/monthlies
+
+    // TODO: Data is not persisting in async storage - looks like it's overwritten when we fetch the dummy data
+
+    const addNextDay = (newEntry = undefined) => {
+      const highestDateString = getHighestDate(allDays)
+      const nextDate = moment(highestDateString).add(1, "days").format("YYYYMMDD")
+
+      const newDaysData = [
+        ...allDays,
+        {
+          id: uuidv4(),
+          date: nextDate, // increment after highest date in allDays
+          dailyEntries: [
+            {
+              entryId: "d3946066-b08a-4e02-b2e0-56ec737cbbf4", // currently no items with these ids in allBulletEntries
+              dayPriorityRanking: null,
+              migrated: false,
+            },
+            {
+              entryId: "69d02fe8-ddfe-45ca-a339-01573c8998b0",
+              dayPriorityRanking: null,
+              migrated: true,
+            },
+            {
+              entryId: "a0b1918f-006c-40b7-85fe-c1c34416762d",
+              dayPriorityRanking: null,
+              migrated: true,
+            },
+          ],
+        },
+      ]
+      allDaysStore.saveAllDays(newDaysData)
+    }
+
+    const removeNextDay = () => {
+      const newDaysData = allDays.filter((day) => day.id !== "7cb2accf-5f3b-4a84-993c-6cc795bec98d")
+      allDaysStore.saveAllDays(newDaysData)
     }
 
     return (
@@ -340,6 +403,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
             allBulletEntries={bulletEntries}
             navigateToScreen={navigateToDay}
           />
+          <Button text="Get/reset initial testing state" onPress={fetchTempInitialData} />
+          <Button text="Add next day" onPress={addNextDay} />
+          <Button text="Remove next day" onPress={removeNextDay} />
         </View>
       </ScrollView>
     )
@@ -356,7 +422,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
  *
  * * Psuedo
  * *  When we create a new day we assign it a unique id as a random guid
- * *  We also assign it the date selected in this format yymmdd (with moment)
+ * *  We also assign it the date selected in this format yyyymmdd (with moment)
  * *  This will be the add day button
  *
  */

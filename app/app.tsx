@@ -45,7 +45,6 @@ function App() {
       await initFonts() // expo
       setupRootStore().then(setRootStore)
     })()
-
     // AsyncStorage.clear()
   }, [])
 

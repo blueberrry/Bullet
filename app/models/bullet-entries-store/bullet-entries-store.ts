@@ -2,9 +2,10 @@ import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import { BulletEntryApi } from "../../services/api/bullet-entry-api"
 import { BulletEntryModel, BulletEntrySnapshotOut } from "../bullet-entry/bullet-entry"
 import { withEnvironment } from "../extensions/with-environment"
+import { INITIAL_ALL_BULLET_ENTRIES } from "../initial-data/initial-data"
 
 /**
- * Example store containing Rick and Morty characters
+ * All bullet entries irrespective of date
  */
 export const BulletEntriesStoreModel = types
   .model("BulletEntriesStore")
@@ -26,6 +27,14 @@ export const BulletEntriesStoreModel = types
         self.saveBulletEntries(result.bulletEntries)
       } else {
         __DEV__ && console.tron.log(result.kind)
+      }
+    },
+  }))
+  .actions((self) => ({
+    getInitialBulletEntriesForTesting: () => {
+      // Here we are saying that if we have no data/initial data only, we should save our hard coded initial entries for testing
+      if (self.bulletEntries.length < 3) {
+        self.bulletEntries.replace(INITIAL_ALL_BULLET_ENTRIES.results)
       }
     },
   }))
