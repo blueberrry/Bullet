@@ -21,7 +21,7 @@ export const INITIAL_ALL_BULLET_ENTRIES = {
     },
     {
       id: "0c623dc4-36a1-4485-a68d-a03cc223924d",
-      status: "todo",
+      status: "completed",
       text: "Empty the robot hoover",
       dateCreated: 1660830439548,
     },
@@ -39,7 +39,7 @@ export const INITIAL_ALL_BULLET_ENTRIES = {
     },
     {
       id: "aad640ce-76de-4a3a-86dc-6cf45750fe0c",
-      status: "todo",
+      status: "completed",
       text: "Varnish table legs and buy mahogony vinyl stickers",
       dateCreated: 1660830459507,
     },

@@ -5,6 +5,7 @@ import React, { CSSProperties, FC, useEffect, useState } from "react"
 import { ScrollView, TouchableOpacity, FlatList, View } from "react-native"
 import ProgressCircle from "react-native-progress-circle"
 import CircularProgress from "react-native-circular-progress-indicator"
+import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
 import { useStores } from "../../models"
 import { DailyEntries, Day } from "../../models/all-days-day/all-days-day"
@@ -14,6 +15,7 @@ import { Text } from "../../components/text/text"
 import { spacing } from "../../theme/spacing"
 import { AntDesign, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
 import { Button } from "../../components/button/button"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 interface ScrollMenuPreviewProps {
   children?: React.ReactNode
@@ -112,7 +114,7 @@ const useGetEntriesByStatus = (entries) => {
     completed,
     completedTotal,
     allTodosTotal,
-    percentageTodosCompleted,
+    percentageTodosCompleted: Math.round(percentageTodosCompleted),
     notes,
     notesTotal,
     inspirationalIdeas,
@@ -357,31 +359,34 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
 
     // TODO: Data is not persisting in async storage - looks like it's overwritten when we fetch the dummy data
 
+    // TODO: Scroll to end of view when adding next day
+
     const addNextDay = (newEntry = undefined) => {
       const highestDateString = getHighestDate(allDays)
       const nextDate = moment(highestDateString).add(1, "days").format("YYYYMMDD")
 
+      console.tron.log("🚀 ~ file: home-screen.tsx ~ line 370 ~ addNextDay ~ uuidv4", uuidv4())
       const newDaysData = [
         ...allDays,
         {
           id: uuidv4(),
           date: nextDate, // increment after highest date in allDays
           dailyEntries: [
-            {
-              entryId: "d3946066-b08a-4e02-b2e0-56ec737cbbf4", // currently no items with these ids in allBulletEntries
-              dayPriorityRanking: null,
-              migrated: false,
-            },
-            {
-              entryId: "69d02fe8-ddfe-45ca-a339-01573c8998b0",
-              dayPriorityRanking: null,
-              migrated: true,
-            },
-            {
-              entryId: "a0b1918f-006c-40b7-85fe-c1c34416762d",
-              dayPriorityRanking: null,
-              migrated: true,
-            },
+            // {
+            //   entryId: "d3946066-b08a-4e02-b2e0-56ec737cbbf4", // currently no items with these ids in allBulletEntries
+            //   dayPriorityRanking: null,
+            //   migrated: false,
+            // },
+            // {
+            //   entryId: "69d02fe8-ddfe-45ca-a339-01573c8998b0",
+            //   dayPriorityRanking: null,
+            //   migrated: true,
+            // },
+            // {
+            //   entryId: "a0b1918f-006c-40b7-85fe-c1c34416762d",
+            //   dayPriorityRanking: null,
+            //   migrated: true,
+            // },
           ],
         },
       ]
@@ -394,20 +399,22 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
     }
 
     return (
-      <ScrollView>
-        <View>
-          <Text>Daily Entries</Text>
+      <SafeAreaView>
+        <ScrollView>
+          <View>
+            <Text>Daily Entries</Text>
 
-          <HorizontalScrollMenu
-            data={[...allDays]}
-            allBulletEntries={bulletEntries}
-            navigateToScreen={navigateToDay}
-          />
-          <Button text="Get/reset initial testing state" onPress={fetchTempInitialData} />
-          <Button text="Add next day" onPress={addNextDay} />
-          <Button text="Remove next day" onPress={removeNextDay} />
-        </View>
-      </ScrollView>
+            <HorizontalScrollMenu
+              data={[...allDays]}
+              allBulletEntries={bulletEntries}
+              navigateToScreen={navigateToDay}
+            />
+            <Button text="Get/reset initial testing state" onPress={fetchTempInitialData} />
+            <Button text="Add next day" onPress={addNextDay} />
+            <Button text="Remove next day" onPress={removeNextDay} />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     )
   },
 )
