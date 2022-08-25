@@ -165,6 +165,24 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
       allDaysStore.saveAllDays(newDaysData)
     }
 
+    const addSpecificDate = (newDate) => {
+      const newDaysData = [
+        ...allDays,
+        {
+          id: uuidv4(),
+          date: newDate, // increment after highest date in allDays
+          dailyEntries: [
+            // {
+            //   entryId: "d3946066-b08a-4e02-b2e0-56ec737cbbf4", // currently no items with these ids in allBulletEntries
+            //   dayPriorityRanking: null,
+            //   migrated: false,
+            // },
+          ],
+        },
+      ]
+      allDaysStore.saveAllDays(newDaysData)
+    }
+
     const removeSpecificDay = (date) => {
       const newDaysData = allDays.filter((day) => day.date !== date)
       allDaysStore.saveAllDays(newDaysData)
