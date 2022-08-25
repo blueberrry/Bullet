@@ -8,8 +8,8 @@
     "invalidEmail": "Invalid email address."
   },
   "welcomeScreen": {
-    "poweredBy": "POWERED BY IGNITE",
-    "readyForLaunch": "Ready for launch.",
+    "header": "Bullet Journal🔫",
+    "startBulletJourney": "Start your bullet journal journey.",
     "continue": "CONTINUE"
   },
   "demoScreen": {

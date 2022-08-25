@@ -6,7 +6,11 @@ import { spacing } from "../../theme"
 /**
  * All text will start off looking like this.
  */
-export const HORIZONTAL_SCROLL_MENU_STYLES: ViewStyle = { width: "100%", backgroundColor: "sienna" }
+export const HORIZONTAL_SCROLL_MENU_STYLES: ViewStyle = {
+  width: "100%",
+  backgroundColor: "sienna",
+  paddingVertical: spacing[2],
+}
 
 export const PREVIEW_CONTAINER_STYLE: ViewStyle = { flex: 1 }
 

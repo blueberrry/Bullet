@@ -8,7 +8,7 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen } from "../screens"
+import { WelcomeScreen, DemoListScreen } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { DailyList } from "../screens/daily-list/daily-list"
 import { BulletBacklog } from "../screens/bullet-backlog/bullet-backlog"
@@ -28,9 +28,8 @@ import { HomeScreen } from "../screens/home-screen/home-screen"
  */
 export type NavigatorParamList = {
   welcome: undefined
-  demo: undefined
-  demoList: undefined
   homeScreen: undefined
+  demoList: undefined
   bulletBacklog: undefined
   dailyList: { id: string }
   // 🔥 Your screens go here
@@ -48,9 +47,8 @@ const AppStack = () => {
       initialRouteName="welcome"
     >
       <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="demoList" component={DemoListScreen} />
       <Stack.Screen name="homeScreen" component={HomeScreen} />
+      <Stack.Screen name="demoList" component={DemoListScreen} />
       <Stack.Screen name="bulletBacklog" component={BulletBacklog} />
       <Stack.Screen name="dailyList" component={DailyList} />
       {/** 🔥 Your screens go here */}

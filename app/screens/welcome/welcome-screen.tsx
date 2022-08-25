@@ -13,7 +13,7 @@ import {
 import { color, spacing, typography } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 
-const bowserLogo = require("./bowser.png")
+const journalLogo = require("./journal.png")
 
 const FULL: ViewStyle = { flex: 1 }
 const CONTAINER: ViewStyle = {
@@ -55,12 +55,11 @@ const ALMOST: TextStyle = {
   fontSize: 26,
   fontStyle: "italic",
 }
-const BOWSER: ImageStyle = {
+const JOURNAL: ImageStyle = {
   alignSelf: "center",
   marginVertical: spacing[5],
   maxWidth: "100%",
-  width: 343,
-  height: 230,
+  height: 250,
 }
 const CONTENT: TextStyle = {
   ...TEXT,
@@ -88,27 +87,28 @@ const FOOTER_CONTENT: ViewStyle = {
 
 export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = observer(
   ({ navigation }) => {
-    const nextScreen = () => navigation.navigate("demo")
+    const nextScreen = () => navigation.navigate("homeScreen")
 
     return (
       <View testID="WelcomeScreen" style={FULL}>
-        <GradientBackground colors={["#422443", "#281b34"]} />
+        <GradientBackground colors={["#422443", "#000000"]} />
         <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
-          <Header headerTx="welcomeScreen.poweredBy" style={HEADER} titleStyle={HEADER_TITLE} />
+          <Header headerText="BULLET JOURNAL 🔫" style={HEADER} titleStyle={HEADER_TITLE} />
           <Text style={TITLE_WRAPPER}>
-            <Text style={TITLE} text="Your new app, " />
-            <Text style={ALMOST} text="almost" />
+            <Text style={TITLE} text="Daily notes " />
+            <Text style={ALMOST} text="simplifed" />
             <Text style={TITLE} text="!" />
           </Text>
-          <Text style={TITLE} preset="header" tx="welcomeScreen.readyForLaunch" />
-          <Image source={bowserLogo} style={BOWSER} />
+          <Text style={TITLE} preset="header" tx="welcomeScreen.startBulletJourney" />
+          <Image source={journalLogo} style={JOURNAL} resizeMode="contain" />
           <Text style={CONTENT}>
-            This probably isn't what your app is going to look like. Unless your designer handed you
-            this screen and, in that case, congrats! You're ready to ship.
+            What is the point of bullet journaling? Bullet journals are designed to be a visual,
+            personalized way to keep track of information, explore creativity, brainstorm ideas, and
+            keep track of inspiration.
           </Text>
           <Text style={CONTENT}>
-            For everyone else, this is where you'll see a live preview of your fully functioning app
-            using Ignite.
+            They can be easily personalized for different purposes and goals based on each person's
+            needs.
           </Text>
         </Screen>
         <SafeAreaView style={FOOTER}>
