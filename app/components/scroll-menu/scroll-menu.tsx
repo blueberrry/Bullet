@@ -23,11 +23,21 @@ import {
 import { ScrollMenuProps, ScrollMenuBtnProps, ScrollMenuProgressProps } from "./scroll-menu.props"
 import { Button } from "../button/button"
 
+const AddDateMenu = () => {
+  // TODO: Add button to launch menu/model to pick if !today todoy || nextDay || select day in upcoming 28 days
+  
+
+}
+
 /**
  *
  * * ScrollMenuList
  *
  **/
+
+// TODO: Remaining items move to backlog/monthly at midnight, user should be notified of impending auto-migrate
+// TODO: Highlight current day with <TODAY> badge/pill on top
+// TODO: Sort list by date order
 
 export const ScrollMenu = (props: ScrollMenuProps) => {
   const { entries, allBulletEntries, navigateToScreen, addDate, removeDate } = props
@@ -78,8 +88,6 @@ const ScrollMenuBtn = (props: ScrollMenuBtnProps) => {
 
   const entriesForThisDateSpan = getEntriesForSelectedDateSpan(allEntries, entries) // TODO: usememo
 
-  // TODO: Remaining items move to backlog/monthly at midnight, user should be notified of impending auto-migrate
-  // TODO: Highlight current day with <TODAY> badge/pill on top
 
   const { entriesNotMigrated, entriesMigratedTotal } =
     useGetEntriesByMigrated(entriesForThisDateSpan)
