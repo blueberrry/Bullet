@@ -165,12 +165,13 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
       allDaysStore.saveAllDays(newDaysData)
     }
 
-    const addSpecificDate = (newDate) => {
+    const addSpecificDay = (newDay) => {
+      debugger
       const newDaysData = [
         ...allDays,
         {
           id: uuidv4(),
-          date: newDate, // increment after highest date in allDays
+          date: newDay,
           dailyEntries: [
             // {
             //   entryId: "d3946066-b08a-4e02-b2e0-56ec737cbbf4", // currently no items with these ids in allBulletEntries
@@ -251,7 +252,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
                 entries={[...allDays]}
                 allBulletEntries={bulletEntries}
                 navigateToScreen={navigateToDay}
-                addDate={addNextDay}
+                addNextDay={addNextDay}
+                addSpecificDay={addSpecificDay}
                 removeDate={removeSpecificDay}
               />
               <Button text="Get/reset initial testing state" onPress={fetchTempInitialData} />

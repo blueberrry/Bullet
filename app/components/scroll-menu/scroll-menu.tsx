@@ -1,8 +1,16 @@
 import moment from "moment"
 import React, { useEffect, useState } from "react"
-import { FlatList, TouchableOpacity, View, ViewStyle } from "react-native"
+import {
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+  ViewStyle,
+} from "react-native"
 import SwipeUpDownModal from "react-native-swipe-modal-up-down"
 import { Calendar, CalendarList, Agenda } from "react-native-calendars"
+import { SafeAreaView, useSafeAreaFrame } from "react-native-safe-area-context"
 import { getEntriesForSelectedDateSpan } from "../../utils/get-entries-for-selected-datespan"
 import { Text } from "../../components/text/text"
 import { useGetEntriesByMigrated } from "../../hooks/useGetEntriesByMigrated"
@@ -24,96 +32,40 @@ import {
 } from "./scroll-menu.presets"
 import { ScrollMenuProps, ScrollMenuBtnProps, ScrollMenuProgressProps } from "./scroll-menu.props"
 import { Button } from "../button/button"
-import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import { spacing } from "../../theme"
+import { useConfigureDayPickerDates } from "../../hooks/useConfigureDayPickerDates"
+import { convertDateToYYYYMMDD } from "../../utils/date-formatting"
 
-const useConfigureDayPickerDates = (dates: string[]) => {
-  // const [markedDates, setMarkedDates] = useState({})
-  const minDate = moment().format("YYYY-MM-DD")
-  const maxDate = moment().add(1, "month").format("YYYY-MM-DD")
+const CALENDER_CONTAINER_STYLES = { backgroundColor: "#000000" }
 
-  const vacation = { key: "vacation", color: "red", selectedDotColor: "blue" }
-  const massage = { key: "massage", color: "blue", selectedDotColor: "blue" }
-  const workout = { key: "workout", color: "green" }
-
-  let markedDates = {}
-  // if (dates.length > 0) {
-  if (dates && dates.length > 0) {
-    debugger
-    dates.forEach((date) => {
-      const formatDateForPicker = moment(date).format("YYYY-MM-DD")
-      console.tron.log(
-        "🚀 ~ file: scroll-menu.tsx ~ line 39 ~ dates.forEach ~ formatDateForPicker",
-        formatDateForPicker,
-      )
-      const newEntry = {
-        [formatDateForPicker]: {
-          disabled: true,
-          disableTouchEvent: true,
-          marked: true,
-          dotColor: "grey",
-        },
-      }
-      markedDates = { ...markedDates, ...newEntry }
-    })
-  }
-  // }
-
-  // useEffect(() => {
-  //   if (dates.length > 0) {
-  //     dates.forEach((date) => {
-  //       const formatDateForPicker = moment(date).format("YYYY-MM-DD")
-  //       console.tron.log(
-  //         "🚀 ~ file: scroll-menu.tsx ~ line 39 ~ dates.forEach ~ formatDateForPicker",
-  //         formatDateForPicker,
-  //       )
-  //       setMarkedDates((prev) => ({ ...prev, [formatDateForPicker]: { disabled: true } }))
-  //     })
-  //   }
-  // }, [dates])
-
-  // console.tron.log(
-  //   "🚀 ~ file: scroll-menu.tsx ~ line 35 ~ useConfigureDayPickerDates ~ markedDates",
-  //   markedDates,
-  // )
-  return { minDate, maxDate, markedDates }
+const CALENDAR_THEME = {
+  todayTextColor: "ffffff",
 }
 
 const DayPicker = (props) => {
-  const { dates } = props
-  console.log("🚀 ~ file: scroll-menu.tsx ~ line 73 ~ DayPicker ~ dates", dates)
+  const { dates, addDay } = props
   const { minDate, maxDate, markedDates } = useConfigureDayPickerDates(dates)
+
   if (dates.length > 0) {
-    debugger
     return (
       <Calendar
-        style={{ backgroundColor: "#000000" }}
-        theme={{
-          // backgroundColor: "#abc123",
-          // calendarBackground: "#abc123",
-          // selectedDayTextColor: "#abc123t",
-          todayTextColor: "ffffff",
-        }}
-        // Initially visible month. Default = now
-        initialDate={minDate} // TODO: Should be today for now or earliest date that isn't disabled
+        style={CALENDER_CONTAINER_STYLES}
+        theme={CALENDAR_THEME}
+        // Default = now
+        initialDate={minDate}
         // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
-        minDate={minDate} // TODO: Should be today
-        // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
-        maxDate={maxDate} // TODO: Should be + 1 month from today
-        // markedDates={{
-        //   "2012-05-25": { marked: true, dotColor: "red", activeOpacity: 0 },
-        //   "2012-05-26": { disabled: true },
-        // }} // TODO: Pass all disabled events (perhaps with marking). Disabled events are ones that have already been created
-        markedDates={{ ...markedDates }}
-        // Handler which gets executed on day press. Default = undefined
+        minDate={minDate}
+        // Maximum date 1 month from earliest
+        maxDate={maxDate}
+        markedDates={{ ...markedDates }} //  todo: TYPES
         onDayPress={(day) => {
-          console.log("selected day", day)
-          // TODO: should be passed up to addDay function
+          const formattedDay = convertDateToYYYYMMDD(day.dateString)
+          addDay(formattedDay)
         }}
         // Handler which gets executed on day long press. Default = undefined
-        onDayLongPress={(day) => {
-          console.log("selected day", day) // TODO: Not needed
-        }}
+        // onDayLongPress={(day) => {
+        //   console.log("selected day", day.dateString) // TODO: Not needed
+        // }}
         // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
         monthFormat={"yyyy MM"} // TODO: Can't see this
         // Handler which gets executed when visible month changes in calendar. Default = undefined
@@ -168,64 +120,75 @@ const styles = {
   },
 }
 
-const BACKGROUND_OVERLAY_BTN_STYLES = {
-  flex: 1,
-  height: 300,
-  width: "100%",
+const MODAL_CONTAINER_STYLES = {
+  marginTop: 300, // Default
+  borderColor: "red",
+  borderWidth: 2,
 }
 
-const MODAL_CONTENT_CONTAINER_STYLES = { flex: 1, padding: spacing[1] }
+const MODAL_CONTENT_CONTAINER_STYLES = { backgroundColor: "#005252", padding: spacing[1] }
 
-const AddDateMenu = ({ modalVisible, setModalVisible, datesArray = [] }) => {
-  console.tron.log("🚀 ~ file: scroll-menu.tsx ~ line 130 ~ AddDateMenu ~ datesArray", datesArray)
+const BACKGROUND_OVERLAY_BTN_STYLES = {
+  flex: 1,
+  height: 300, // default
+  width: "100%",
+  // borderColor: "green",
+  // borderWidth: 4,
+}
+
+// todo: prop types
+
+const AddDateMenu = ({
+  modalVisible,
+  setModalVisible,
+  animateModal,
+  setAnimateModal,
+  children,
+}) => {
   // TODO: Add button to launch menu/model to pick if !today todoy || nextDay || select day in upcoming 28 days
-  const [animateModal, setanimateModal] = useState(false)
-  const [datePickerVisible, setDatePickerVisible] = useState(false)
+  // const [animateModal, setanimateModal] = useState(false)
+  // const [datePickerVisible, setDatePickerVisible] = useState(false)
 
+  const [modalContentHeight, setModalContentHeight] = useState(0)
+
+  const { height, width } = useSafeAreaFrame()
+
+  // TODO: Get height of rendered view and set that height as the swipe modal
   return (
-    <SwipeUpDownModal
-      modalVisible={modalVisible}
-      PressToanimate={animateModal}
-      // if you don't pass HeaderContent you should pass marginTop in view of ContentModel to Make modal swipeable
-      ContentModal={
-        <View style={MODAL_CONTENT_CONTAINER_STYLES}>
-          <Text>Add day</Text>
-          <Button
-            text="Add next day"
-            onPress={() => {
-              setanimateModal(true)
+    <SafeAreaView>
+      <SwipeUpDownModal
+        modalVisible={modalVisible}
+        PressToanimate={animateModal}
+        // if you don't pass HeaderContent you should pass marginTop in view of ContentModel to Make modal swipeable
+        ContentModalStyle={{ MODAL_CONTAINER_STYLES, marginTop: modalContentHeight }}
+        ContentModal={
+          <View
+            style={MODAL_CONTENT_CONTAINER_STYLES}
+            onLayout={(e) => {
+              setModalContentHeight(height - e.nativeEvent.layout.height)
             }}
-          />
-          <Button
-            text="Add specific day"
-            onPress={() => {
-              setDatePickerVisible(true)
-              // setanimateModal(true)
-            }}
-          />
-          {datePickerVisible && <DayPicker dates={datesArray} />}
-        </View>
-      }
-      HeaderStyle={styles.headerContent}
-      ContentModalStyle={styles.modal}
-      HeaderContent={
-        <View style={{ flex: 1 }}>
-          <TouchableOpacity
-            style={BACKGROUND_OVERLAY_BTN_STYLES}
-            // text={"Press Me"}
-            onPress={() => {
-              // setModalVisible(false)
-              setanimateModal(true)
-            }}
-          />
-        </View>
-      }
-      onClose={() => {
-        setDatePickerVisible(false)
-        setModalVisible(false)
-        setanimateModal(false)
-      }}
-    />
+          >
+            {children}
+          </View>
+        }
+        HeaderStyle={styles.headerContent}
+        HeaderContent={
+          <View>
+            <TouchableOpacity
+              style={{ ...BACKGROUND_OVERLAY_BTN_STYLES, height: modalContentHeight }}
+              onPress={() => {
+                // setModalVisible(false)
+                setAnimateModal(true)
+              }}
+            />
+          </View>
+        }
+        onClose={() => {
+          setModalVisible(false)
+          setAnimateModal(false)
+        }}
+      />
+    </SafeAreaView>
   )
 }
 
@@ -238,17 +201,19 @@ const AddDateMenu = ({ modalVisible, setModalVisible, datesArray = [] }) => {
 // TODO: Remaining items move to backlog/monthly at midnight, user should be notified of impending auto-migrate
 // TODO: Highlight current day with <TODAY> badge/pill on top
 // TODO: Sort list by date order
+// TODO: Ensure data can have no dupes
 
 export const ScrollMenu = (props: ScrollMenuProps) => {
-  const { entries, allBulletEntries, navigateToScreen, addDate, removeDate } = props
+  const { entries, allBulletEntries, navigateToScreen, addNextDay, addSpecificDay, removeDate } =
+    props
 
-  const [addDateModalVisible, setAddDateModalVisible] = useState(false)
+  const [dateMenuVisible, setDateMenuVisible] = useState(false)
+  const [animateDateMenu, setAnimateDateMenu] = useState(false)
+
+  const [datePickerVisble, setDatePickerVisible] = useState(false)
+  const [animateDatePicker, setAnimateDatePicker] = useState(false)
 
   const datesOnly = entries.map((entry) => entry.date)
-  console.log(
-    "🚀 ~ file: scroll-menu.tsx ~ line 229 ~ ScrollMenu ~ datesOnly",
-    JSON.stringify(datesOnly),
-  )
 
   const renderItem = ({ item }) => {
     return (
@@ -280,16 +245,43 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
         ListFooterComponent={
           <View style={SCROLL_MENU_ADD_BTN_CONTAINER_STYLES}>
             {/* <Button text="+" onPress={addDate} /> */}
-            <Button text="+" onPress={() => setAddDateModalVisible(true)} />
+            <Button text="+" onPress={() => setDateMenuVisible(true)} />
           </View>
         }
       />
       <AddDateMenu
-        modalVisible={addDateModalVisible}
-        setModalVisible={setAddDateModalVisible}
-        datesArray={datesOnly}
-      />
-      <View style={{ height: 300, width: "100%", backgroundColor: "red" }}></View>
+        modalVisible={dateMenuVisible}
+        setModalVisible={setDateMenuVisible}
+        animateModal={animateDateMenu}
+        setAnimateModal={setAnimateDateMenu}
+      >
+        <Text>Add day</Text>
+        <Button
+          text="Add next day"
+          onPress={() => {
+            addNextDay()
+            setAnimateDateMenu(true)
+            setDateMenuVisible(false)
+          }}
+        />
+        <Button
+          text="Add specific day"
+          onPress={() => {
+            setDateMenuVisible(false)
+            setDatePickerVisible(true)
+            // setanimateModal(true)
+          }}
+        />
+      </AddDateMenu>
+      <AddDateMenu
+        modalVisible={datePickerVisble}
+        setModalVisible={setDatePickerVisible}
+        animateModal={animateDatePicker}
+        setAnimateModal={setAnimateDatePicker}
+      >
+        <Text>Add day</Text>
+        <DayPicker dates={datesOnly} addDay={addSpecificDay} />
+      </AddDateMenu>
     </>
   )
 }

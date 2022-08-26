@@ -6,7 +6,8 @@ export interface ScrollMenuProps {
   entries: DaySnapshotIn[] // || Week || Month?
   allBulletEntries?: BulletEntryStoreSnapshotIn[]
   navigateToScreen: (id: string) => void
-  addDate: () => void
+  addNextDay: () => void
+  addSpecificDay: (date: string) => void
   removeDate: (date: Day["date"]) => void
 }
 
