@@ -108,7 +108,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
     const { bulletEntries } = bulletEntriesStore
     const { allDays } = allDaysStore
 
-    // TODO: Every time this screen mounts we're going to wipe out new data with hardcoded data just the same as the api call
+    // TODO: Once backend completed we should fetch on mount similar to this
     // useEffect(() => {
     //   function fetchTempInitialData() {
     //     allDaysStore.getInitialAllDaysForTesting()
@@ -166,7 +166,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
     }
 
     const addSpecificDay = (newDay) => {
-      debugger
       const newDaysData = [
         ...allDays,
         {

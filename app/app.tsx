@@ -56,13 +56,15 @@ function App() {
   // You can replace with your own loading component if you wish.
   if (!rootStore || !isNavigationStateRestored) return null
 
+  const GESTURE_ROOT_STYLES = { flex: 1 }
+
   // otherwise, we're ready to render the app
   return (
     <ToggleStorybook>
       <RootStoreProvider value={rootStore}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <ErrorBoundary catchErrors={"always"}>
-            <GestureHandlerRootView style={{ flex: 1 }}>
+            <GestureHandlerRootView style={GESTURE_ROOT_STYLES}>
               <AppNavigator
                 initialState={initialNavigationState}
                 onStateChange={onNavigationStateChange}
