@@ -1,7 +1,7 @@
 import moment from "moment"
 import React, { useState } from "react"
 import { FlatList, TouchableOpacity, View } from "react-native"
-import { getEntriesForSelectedDateSpan } from "../../utils/get-entries-for-selected-datespan"
+import { getEntriesForSelectedDateSpan } from "../../utils/configure-entries"
 import { Text } from "../../components/text/text"
 import { useGetEntriesByMigrated } from "../../hooks/useGetEntriesByMigrated"
 import { useGetEntriesByStatus } from "../../hooks/useGetEntriesByStatus"

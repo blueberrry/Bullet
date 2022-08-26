@@ -9,7 +9,6 @@ import { observer } from "mobx-react-lite"
 import {
   Header,
   Screen,
-  Text,
   AutoImage as Image,
   GradientBackground,
   Button,
@@ -18,8 +17,8 @@ import {
 import { color, spacing } from "../../theme"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
-import { GestureHandlerRootView } from "react-native-gesture-handler"
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
+import DraggableBulletList from "../../components/draggable-bullet-list/draggable-bullet-list"
 
 // TODO: Implement moment lib
 
@@ -225,12 +224,10 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
     //       Create a function that assigned an iterative order value (1,2,3) based on earliest to latest dateCreated
 
     const renderItem = ({ item, index, drag, isActive }) => {
+      const LIST_ITEM_STYLES = { backgroundColor: isActive ? "blue" : "grey" }
       return (
         <ScaleDecorator>
-          <TouchableOpacity
-            onLongPress={drag}
-            style={{ backgroundColor: isActive ? "blue" : "grey" }}
-          >
+          <TouchableOpacity onLongPress={drag} style={LIST_ITEM_STYLES}>
             {/* <Image source={{ uri: item.image }} style={IMAGE} /> */}
             {/* <Text style={LIST_TEXT}>entry id: {item.id}</Text>
       <Text style={LIST_TEXT}>entry status: {item.status}</Text>
@@ -256,27 +253,7 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
               titleStyle={HEADER_TITLE}
             />
 
-            <View
-              style={{
-                flex: 1,
-                width: "100%",
-                height: "100%",
-                borderWidth: 2,
-                borderColor: "red",
-              }}
-            >
-              <DraggableFlatList
-                // contentContainerStyle={FLAT_LIST}
-                containerStyle={{ flex: 1, width: "100%", height: "100%" }}
-                data={[...bulletEntries]}
-                keyExtractor={(item) => String(item.id)}
-                renderItem={renderItem}
-                onDragBegin={(x) => {
-                  console.tron.log(`onDragBegin: ${x}`)
-                  setX(x)
-                }}
-              />
-            </View>
+            <DraggableBulletList entries={[...bulletEntries]} />
 
             <Button text="Add new bullet entry" onPress={addBulletEntry} />
             <Button text="Remove new bullet entry/ies" onPress={() => removeBulletEntry()} />

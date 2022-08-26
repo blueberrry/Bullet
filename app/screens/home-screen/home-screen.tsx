@@ -229,7 +229,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
 
     return (
       <View testID="DemoScreen" style={FULL}>
-        <GradientBackground colors={["#422443", "#281b34"]} />
+        <GradientBackground colors={["#422443", "#000000"]} />
         <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
           <Header
             headerTx="demoScreen.howTo"
@@ -288,7 +288,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
           <Button
             style={DEMO}
             textStyle={DEMO_TEXT}
-            text="Demo all items"
+            text="Entries backlog"
             onPress={() => navigation.navigate("bulletBacklog")}
           />
           <Button
