@@ -1,16 +1,6 @@
 import moment from "moment"
-import React, { useEffect, useState } from "react"
-import {
-  FlatList,
-  ScrollView,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-  ViewStyle,
-} from "react-native"
-import SwipeUpDownModal from "react-native-swipe-modal-up-down"
-import { Calendar, CalendarList, Agenda } from "react-native-calendars"
-import { SafeAreaView, useSafeAreaFrame } from "react-native-safe-area-context"
+import React, { useState } from "react"
+import { FlatList, TouchableOpacity, View } from "react-native"
 import { getEntriesForSelectedDateSpan } from "../../utils/get-entries-for-selected-datespan"
 import { Text } from "../../components/text/text"
 import { useGetEntriesByMigrated } from "../../hooks/useGetEntriesByMigrated"
@@ -32,8 +22,6 @@ import {
 } from "./scroll-menu.presets"
 import { ScrollMenuProps, ScrollMenuBtnProps, ScrollMenuProgressProps } from "./scroll-menu.props"
 import { Button } from "../button/button"
-import { spacing } from "../../theme"
-import { useConfigureDayPickerDates } from "../../hooks/useConfigureDayPickerDates"
 import { convertDateToYYYYMMDD } from "../../utils/date-formatting"
 import { DayPicker } from "../day-picker-calendar/day-picker-calendar"
 import { AddDateMenu } from "../select-date-menu-modal/select-date-menu-modal"
@@ -50,6 +38,8 @@ import { AddDateMenu } from "../select-date-menu-modal/select-date-menu-modal"
 // TODO: Ensure data can have no dupes
 // TODO: On day picker select we need to close the modal
 // TODO: Add specific day not showing when no days
+// TODO: Move other components out
+// TODO: Reusability - how much of this is reusable for weeklies/monthlies?
 
 export const ScrollMenu = (props: ScrollMenuProps) => {
   const { entries, allBulletEntries, navigateToScreen, addNextDay, addSpecificDay, removeDate } =
