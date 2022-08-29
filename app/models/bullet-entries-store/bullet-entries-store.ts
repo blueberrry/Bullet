@@ -32,10 +32,25 @@ export const BulletEntriesStoreModel = types
   }))
   .actions((self) => ({
     getInitialBulletEntriesForTesting: () => {
-      // Here we are saying that if we have no data/initial data only, we should save our hard coded initial entries for testing
+      // TODO: Temp starting point in lieue of api request
       if (self.bulletEntries.length < 3) {
         self.bulletEntries.replace(INITIAL_ALL_BULLET_ENTRIES.results)
       }
+    },
+  }))
+  .actions((self) => ({
+    // TODO: Unused
+    getEntriesFromIds: (ids = []) => {
+      // pass array of guids for specific date
+      // return relevant entries from all bullet entires
+      const entriesFromIds = self.bulletEntries.filter((entry) => {
+        if (ids.includes(entry.id)) {
+          return entry
+        }
+        return null
+      })
+
+      return entriesFromIds
     },
   }))
 

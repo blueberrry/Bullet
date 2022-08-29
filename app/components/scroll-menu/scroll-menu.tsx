@@ -141,6 +141,12 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
 const ScrollMenuBtn = (props: ScrollMenuBtnProps) => {
   const { date, entries, allEntries, onMenuBtnPress } = props
 
+  // get migrated entries/not migrated from days entries
+  // get days entries ids as array
+  // get entriesData from allEntries
+
+  // merge entriesData with day entries details
+
   const entriesForThisDateSpan = getEntriesForSelectedDateSpan(allEntries, entries) // TODO: usememo
 
   const { entriesNotMigrated, entriesMigratedTotal } =

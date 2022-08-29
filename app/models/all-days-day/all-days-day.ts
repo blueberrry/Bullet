@@ -5,11 +5,20 @@ import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
  */
 
 // TODO: This could be incorrect, check/test
-export const DailyEntriesModel = types.model("DailyEntries").props({
-  entryId: types.maybe(types.identifier || types.string),
-  dayPriorityRanking: types.maybe(types.null || types.number),
-  migrated: types.maybe(types.boolean),
-})
+export const DailyEntriesModel = types
+  .model("DailyEntries")
+  .props({
+    entryId: types.maybe(types.identifier || types.string),
+    dayPriorityRanking: types.maybe(types.null || types.number),
+    migrated: types.maybe(types.boolean),
+  })
+  .actions((self) => ({
+    getMigratedEntries: () => {
+      const notMigrated = self.migrated === false
+      const migrated = self.migrated === true
+      return { migrated, notMigrated }
+    },
+  }))
 
 export interface DailyEntries extends Instance<typeof DailyEntriesModel> {}
 export interface DailyEntriesSnapshotOut extends SnapshotOut<typeof DailyEntriesModel> {}

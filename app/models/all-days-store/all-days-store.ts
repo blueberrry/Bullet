@@ -20,11 +20,6 @@ export const AllDaysStoreModel = types
   .actions((self) => ({
     saveAllDays: (allDaysSnapshot: Day[]) => {
       // TODO: Still don't understand snapshotin/out
-      // console.tron.log(
-      //   "🚀 ~ file: all-days-store.ts ~ line 17 ~ .actions ~ allDaysSnapshot",
-      //   allDaysSnapshot,
-      // )
-
       self.allDays.replace(allDaysSnapshot) // TODO: Fix this
     },
   }))
@@ -41,6 +36,7 @@ export const AllDaysStoreModel = types
     },
   }))
   .actions((self) => ({
+    // TODO: This is a temp starting point in lieue of an api request
     getInitialAllDaysForTesting: () => {
       // Here we are saying that if we have no data/initial data only, we should save our hard coded initial entries for testing
       if (self.allDays.length < 3) {
