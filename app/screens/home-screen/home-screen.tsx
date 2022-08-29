@@ -2,6 +2,7 @@ import React, { FC } from "react"
 import { ImageStyle, Platform, TextStyle, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
+import moment from "moment"
 import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
 import {
@@ -18,82 +19,35 @@ import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { Api } from "../../services/api"
 import { save } from "../../utils/storage"
+import { getLatestDate } from "../../utils/date-formatting"
 import { useStores } from "../../models"
-import { getHighestDate } from "../../utils/getHighestDate"
-import moment from "moment"
+import {
+  CONTAINER,
+  DEMO,
+  DEMO_TEXT,
+  FULL,
+  HEADER,
+  HEADER_TITLE,
+  HEART,
+  HINT,
+  IGNITE,
+  LOVE,
+  LOVE_WRAPPER,
+  TAGLINE,
+  TITLE,
+} from "./home-screen.presets"
 
 export const logoIgnite = require("./logo-ignite.png")
 export const heart = require("./heart.png")
 
-const FULL: ViewStyle = { flex: 1 }
-const CONTAINER: ViewStyle = {
-  backgroundColor: color.transparent,
-  paddingHorizontal: spacing[4],
-}
-const DEMO: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-  backgroundColor: color.palette.deepPurple,
-}
-const BOLD: TextStyle = { fontWeight: "bold" }
-const DEMO_TEXT: TextStyle = {
-  ...BOLD,
-  fontSize: 13,
-  letterSpacing: 2,
-}
-const HEADER: TextStyle = {
-  paddingTop: spacing[3],
-  paddingBottom: spacing[5] - 1,
-  paddingHorizontal: 0,
-}
-const HEADER_TITLE: TextStyle = {
-  ...BOLD,
-  fontSize: 12,
-  lineHeight: 15,
-  textAlign: "center",
-  letterSpacing: 1.5,
-}
-const TITLE: TextStyle = {
-  ...BOLD,
-  fontSize: 28,
-  lineHeight: 38,
-  textAlign: "center",
-  marginBottom: spacing[5],
-}
-const TAGLINE: TextStyle = {
-  color: "#BAB6C8",
-  fontSize: 15,
-  lineHeight: 22,
-  marginBottom: spacing[4] + spacing[1],
-}
-const IGNITE: ImageStyle = {
-  marginVertical: spacing[6],
-  alignSelf: "center",
-  width: 180,
-  height: 100,
-}
-const LOVE_WRAPPER: ViewStyle = {
-  flexDirection: "row",
-  alignItems: "center",
-  alignSelf: "center",
-}
-const LOVE: TextStyle = {
-  color: "#BAB6C8",
-  fontSize: 15,
-  lineHeight: 22,
-}
-const HEART: ImageStyle = {
-  marginHorizontal: spacing[2],
-  width: 10,
-  height: 10,
-  resizeMode: "contain",
-}
-const HINT: TextStyle = {
-  color: "#BAB6C8",
-  fontSize: 12,
-  lineHeight: 15,
-  marginVertical: spacing[2],
-}
+// TODO: Migrate days entries to backlog if date is older than today
+// TODO: Move styles to presets component
+
+// TODO: Data is not persisting in async storage - looks like it's overwritten when we fetch the dummy data
+
+// TODO: Sould this logic be in the `addNextDay` action?
+
+// TODO: Some of these views/texts with styles could be extracted to reusable components, eg Header
 
 const platformCommand = Platform.select({
   ios: "Cmd + D",
@@ -127,60 +81,25 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
       navigation.navigate("dailyList", { id })
     }
 
-    // TODO: Migrate days entries to backlog if date is older than today
     //       or it could be greyed out with user prompt to migrate days manually/migrate all to backlog/monthly
     //       any dates older than yesterday should auto migrate to backlog/monthlies
 
-    // TODO: Data is not persisting in async storage - looks like it's overwritten when we fetch the dummy data
-
-    // TODO: Add day btn should open menu with + day or + date
-
-    // TODO: Sould this be an action in store?
     const addNextDay = () => {
       let nextDate // TODO: type string YYYYMMDD
       // If there is daily data, increment the next day date and add to array
       if (allDays.length > 0) {
         // Gets highest date and sets the nextDate as the subsequent day
-        const highestDateString = getHighestDate(allDays)
+        const highestDateString = getLatestDate(allDays)
         nextDate = moment(highestDateString).add(1, "days").format("YYYYMMDD")
       } else {
         // If there is no daily data, add today as date
         nextDate = moment().format("YYYYMMDD")
       }
-
-      const newDaysData = [
-        ...allDays,
-        {
-          id: uuidv4(),
-          date: nextDate, // increment after highest date in allDays
-          dailyEntries: [
-            // {
-            //   entryId: "d3946066-b08a-4e02-b2e0-56ec737cbbf4", // currently no items with these ids in allBulletEntries
-            //   dayPriorityRanking: null,
-            //   migrated: false,
-            // },
-          ],
-        },
-      ]
-      allDaysStore.saveAllDays(newDaysData)
+      allDaysStore.addNextDay(nextDate)
     }
 
-    const addSpecificDay = (newDay) => {
-      const newDaysData = [
-        ...allDays,
-        {
-          id: uuidv4(),
-          date: newDay,
-          dailyEntries: [
-            // {
-            //   entryId: "d3946066-b08a-4e02-b2e0-56ec737cbbf4", // currently no items with these ids in allBulletEntries
-            //   dayPriorityRanking: null,
-            //   migrated: false,
-            // },
-          ],
-        },
-      ]
-      allDaysStore.saveAllDays(newDaysData)
+    const addSpecificDay = (newDate) => {
+      allDaysStore.addSpecificDay(newDate)
     }
 
     const removeSpecificDay = (date) => {

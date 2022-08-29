@@ -1,7 +1,9 @@
 import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import "react-native-get-random-values"
+import { v4 as uuidv4 } from "uuid"
 import { BulletEntryApi } from "../../services/api/bullet-entry-api"
 import { withEnvironment } from "../extensions/with-environment"
-import { DayModel, DaySnapshotIn, DaySnapshotOut } from "../all-days-day/all-days-day"
+import { Day, DayModel, DaySnapshotIn, DaySnapshotOut } from "../all-days-day/all-days-day"
 import { AllDaysApi } from "../../services/api/all-days-api"
 import { INITIAL_ALL_DAYS } from "../initial-data/initial-data"
 /**
@@ -14,7 +16,7 @@ export const AllDaysStoreModel = types
   })
   .extend(withEnvironment)
   .actions((self) => ({
-    saveAllDays: (allDaysSnapshot: DaySnapshotOut[]) => {
+    saveAllDays: (allDaysSnapshot: Day[]) => {
       // console.tron.log(
       //   "🚀 ~ file: all-days-store.ts ~ line 17 ~ .actions ~ allDaysSnapshot",
       //   allDaysSnapshot,
@@ -41,6 +43,18 @@ export const AllDaysStoreModel = types
       if (self.allDays.length < 3) {
         self.allDays.replace(INITIAL_ALL_DAYS.results)
       }
+    },
+  }))
+  .actions((self) => ({
+    addNextDay: (date) => {
+      const nextDay = { id: uuidv4(), date, dailyEntries: [] }
+      self.allDays.push(nextDay)
+    },
+  }))
+  .actions((self) => ({
+    addSpecificDay: (date) => {
+      const nextDay = { id: uuidv4(), date, dailyEntries: [] }
+      self.allDays.push(nextDay)
     },
   }))
 

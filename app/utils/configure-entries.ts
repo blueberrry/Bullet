@@ -1,3 +1,5 @@
+// TODO: This will work but not utilising mobx state tree properly
+
 export const getEntriesForSelectedDateSpan = (allBulletEntries, entriesForThisDate) => {
   if (allBulletEntries.length > 0 && entriesForThisDate.length > 0) {
     return entriesForThisDate.map((entryForThisDate) => {
@@ -41,7 +43,10 @@ export const getEntriesDromDayIds = (allBulletEntries, thisDaysEntryIds) => {
 
 // Day specific data such as migrated and order now should be merged to build out the rows with all the data needed for each item
 // types Array<All_ENTRIES with entry migrated and order state>
-export const mergeBulletEntriesDataWithDailyData = (bulletEntriesForThisDay, thisDaysSpecificData) => {
+export const mergeBulletEntriesDataWithDailyData = (
+  bulletEntriesForThisDay,
+  thisDaysSpecificData,
+) => {
   let newData = []
 
   if (bulletEntriesForThisDay > 0 && thisDaysSpecificData > 0) {
@@ -53,6 +58,7 @@ export const mergeBulletEntriesDataWithDailyData = (bulletEntriesForThisDay, thi
     })
     return newData
   }
+  return newData
 }
 
 // if this items dayPriorityRanking is null then something has gone wrong 🤯, it shouldn't because each item should only update
