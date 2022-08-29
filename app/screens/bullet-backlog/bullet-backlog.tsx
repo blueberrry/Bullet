@@ -89,15 +89,6 @@ const TEMP_DAY_ID = "ac5f2861-4a9e-42ce-b4f5-c06f21b84dfd"
 
 // TODO: Change ID to Id
 
-// Get this day data from ALL_DAYS (ALL_DAYS_INITIAL_DATA[0])
-const getThisDay = (dayId, allDays) => {
-  let thisDay = {} // TODO: types
-  if (allDays.length > 0) {
-    thisDay = allDays.find((day) => day.dayId === dayId)
-  }
-  return thisDay
-}
-
 // Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].dailyEntries)
 const getThisDaysEntryIds = (thisDay) => {
   let dayIdsArray = []

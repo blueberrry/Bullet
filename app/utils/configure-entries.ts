@@ -1,5 +1,6 @@
-// TODO: This will work but not utilising mobx state tree properly
+// TODO: Most of these need to be move to actions in their respective stores - see about merging data
 
+// Unsure which store to put this action in
 export const getEntriesForSelectedDateSpan = (allBulletEntries, entriesForThisDate) => {
   if (allBulletEntries.length > 0 && entriesForThisDate.length > 0) {
     return entriesForThisDate.map((entryForThisDate) => {
@@ -15,14 +16,16 @@ export const getEntriesForSelectedDateSpan = (allBulletEntries, entriesForThisDa
 }
 
 // Get this day data from ALL_DAYS (ALL_DAYS_INITIAL_DATA[0])
-export const getThisDay = (dayId, allDays) => {
-  let thisDay = {} // TODO: types
-  if (allDays.length > 0) {
-    thisDay = allDays.find((day) => day.dayId === dayId)
-  }
-  return thisDay
-}
+// TODO: Moved to all-days-store getSpecificDayById
+// export const getThisDay = (dayId, allDays) => {
+//   let thisDay = {} // TODO: types
+//   if (allDays.length > 0) {
+//     thisDay = allDays.find((day) => day.dayId === dayId)
+//   }
+//   return thisDay
+// }
 
+// Get days entry ids in all-days-store
 // Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].dailyEntries)
 export const getThisDaysEntryIds = (thisDay) => {
   let dayIdsArray = []

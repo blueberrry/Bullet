@@ -26,6 +26,8 @@ export const DayModel = types.model("Day").props({
   dailyEntries: types.array(DailyEntriesModel), // TODO: Here might be causing all-days-store error
 })
 
+// getDaysEntryIds
+
 // TODO: Sort above mess out
 
 export interface Day extends Instance<typeof DayModel> {}

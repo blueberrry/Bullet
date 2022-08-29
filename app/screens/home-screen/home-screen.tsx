@@ -85,7 +85,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
     //       any dates older than yesterday should auto migrate to backlog/monthlies
 
     const addNextDay = () => {
-      let nextDate // TODO: type string YYYYMMDD
+      let nextDate // TODO: type for string YYYYMMDD
       // If there is daily data, increment the next day date and add to array
       if (allDays.length > 0) {
         // Gets highest date and sets the nextDate as the subsequent day

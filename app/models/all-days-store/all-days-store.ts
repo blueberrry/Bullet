@@ -6,6 +6,8 @@ import { withEnvironment } from "../extensions/with-environment"
 import { Day, DayModel, DaySnapshotIn, DaySnapshotOut } from "../all-days-day/all-days-day"
 import { AllDaysApi } from "../../services/api/all-days-api"
 import { INITIAL_ALL_DAYS } from "../initial-data/initial-data"
+import { YYYYMMDD } from "../../types/types"
+
 /**
  * All Days store
  */
@@ -17,6 +19,7 @@ export const AllDaysStoreModel = types
   .extend(withEnvironment)
   .actions((self) => ({
     saveAllDays: (allDaysSnapshot: Day[]) => {
+      // TODO: Still don't understand snapshotin/out
       // console.tron.log(
       //   "🚀 ~ file: all-days-store.ts ~ line 17 ~ .actions ~ allDaysSnapshot",
       //   allDaysSnapshot,
@@ -46,17 +49,25 @@ export const AllDaysStoreModel = types
     },
   }))
   .actions((self) => ({
-    addNextDay: (date) => {
+    addNextDay: (date: YYYYMMDD) => {
       const nextDay = { id: uuidv4(), date, dailyEntries: [] }
       self.allDays.push(nextDay)
     },
   }))
   .actions((self) => ({
-    addSpecificDay: (date) => {
+    addSpecificDay: (date: YYYYMMDD) => {
       const nextDay = { id: uuidv4(), date, dailyEntries: [] }
       self.allDays.push(nextDay)
     },
   }))
+  .actions((self) => ({
+    getSpecificDayById: (id) => {
+      return self.allDays.find((day) => day.id === id)
+    },
+  }))
+
+// getSpecificDaysEntryIdsByDayId
+//
 
 export interface AllDaysStore extends Instance<typeof AllDaysStoreModel> {}
 export interface DayStoreSnapshotOut extends SnapshotOut<typeof AllDaysStoreModel> {}
