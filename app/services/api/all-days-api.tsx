@@ -16,7 +16,7 @@ export class AllDaysApi {
     try {
       // make the api call
       const response: ApiResponse<any> = await this.api.apisauce.get(
-        "https://run.mocky.io/v3/09a5471c-684a-4e6e-83e6-09404e7b2cbf",
+        "https://run.mocky.io/v3/f930147e-4214-4df7-af43-d073b31dd78e",
         { amount: API_PAGE_SIZE },
       )
 
@@ -26,7 +26,6 @@ export class AllDaysApi {
         if (problem) return problem
       }
 
-      debugger
       const allDays = response.data.results
 
       return { kind: "ok", allDays }

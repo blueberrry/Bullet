@@ -63,7 +63,7 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
           }}
           id={item.id}
           date={item.date}
-          entries={item.dailyEntries}
+          entries={item.entriesDetails}
           allEntries={allBulletEntries}
         />
       </View>

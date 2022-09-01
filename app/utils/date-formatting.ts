@@ -1,7 +1,7 @@
 // TODO: Put all moment date formatting utils in one utils file
 
 import moment from "moment"
-import { DaySnapshotIn, DaySnapshotOut } from "../models/all-days-day/all-days-day"
+import { DaySnapshotIn, DaySnapshotOut } from "../models/day/day"
 
 export const convertDateToYYYYMMDD = (date) => {
   const formattedDate = moment(date).format("YYYYMMDD")

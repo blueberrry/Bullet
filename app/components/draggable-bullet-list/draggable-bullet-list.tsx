@@ -38,7 +38,7 @@ const DraggableBulletList = (props) => {
         // contentContainerStyle={FLAT_LIST}
         containerStyle={DRAGGABLE_LIST_STYLES}
         data={[...entries]}
-        keyExtractor={(item) => String(item.id)} // TODO: This could also be entryId for dailies, I think the data will have both?
+        keyExtractor={(item) => String(item.id)} // TODO: This could also be id for dailies, I think the data will have both?
         renderItem={renderItem}
         onDragBegin={(x) => {
           console.tron.log(`onDragBegin: ${x}`)

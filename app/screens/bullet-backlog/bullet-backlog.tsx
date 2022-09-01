@@ -24,7 +24,7 @@ import DraggableBulletList from "../../components/draggable-bullet-list/draggabl
 
 /**
  *  Pseudo code
- * *    for example, we nav to day screen, if dayPriorityRanking value is null, change the ranking by timestamp?
+ * *    for example, we nav to day screen, if priorityRanking value is null, change the ranking by timestamp?
  * *   -how would that work if we had a list of user sorted items with various ranking
  * *   - new items would be added to the list
  * *   - If migrating item we should just add it the lowest ranking (ie: 12)
@@ -47,64 +47,64 @@ const ALL_DAYS_INITIAL_DATA = [
   {
     id: ALL_DAYS_INITIAL_IDS[0], // TODO: Or Date.now()/day()
     date: "day",
-    dailyEntries: [
-      { entryId: "", dayPriorityRanking: null, migrated: false },
-      { entryId: "", dayPriorityRanking: null, migrated: false },
-      { entryId: "", dayPriorityRanking: null, migrated: false },
+    entriesDetails: [
+      { id: "", priorityRanking: null, migrated: false },
+      { id: "", priorityRanking: null, migrated: false },
+      { id: "", priorityRanking: null, migrated: false },
     ],
   },
   {
     id: ALL_DAYS_INITIAL_IDS[1],
     date: "day",
-    dailyEntries: [
-      { entryId: "", dayPriorityRanking: null, migrated: false },
-      { entryId: "", dayPriorityRanking: null, migrated: false },
-      { entryId: "", dayPriorityRanking: null, migrated: false },
-      { entryId: "", dayPriorityRanking: null, migrated: false },
+    entriesDetails: [
+      { id: "", priorityRanking: null, migrated: false },
+      { id: "", priorityRanking: null, migrated: false },
+      { id: "", priorityRanking: null, migrated: false },
+      { id: "", priorityRanking: null, migrated: false },
     ],
   },
   {
     id: ALL_DAYS_INITIAL_IDS[2],
     date: "day",
-    dailyEntries: [
-      { entryId: "", dayPriorityRanking: null, migrated: false },
-      { entryId: "", dayPriorityRanking: null, migrated: false },
-      { entryId: "", dayPriorityRanking: null, migrated: false },
+    entriesDetails: [
+      { id: "", priorityRanking: null, migrated: false },
+      { id: "", priorityRanking: null, migrated: false },
+      { id: "", priorityRanking: null, migrated: false },
     ],
   },
   {
     id: ALL_DAYS_INITIAL_IDS[3],
     date: "day",
-    dailyEntries: [
-      { entryId: "", dayPriorityRanking: null, migrated: false },
-      { entryId: "", dayPriorityRanking: null, migrated: false },
-      { entryId: "", dayPriorityRanking: null, migrated: false },
+    entriesDetails: [
+      { id: "", priorityRanking: null, migrated: false },
+      { id: "", priorityRanking: null, migrated: false },
+      { id: "", priorityRanking: null, migrated: false },
     ],
   },
 ]
 
-const DAILY_ENTRIES_INITIAL_DATA = ALL_DAYS_INITIAL_DATA[0].dailyEntries
+const DAILY_ENTRIES_INITIAL_DATA = ALL_DAYS_INITIAL_DATA[0].entriesDetails
 
 const TEMP_DAY_ID = "ac5f2861-4a9e-42ce-b4f5-c06f21b84dfd"
 
 // TODO: Change ID to Id
 
-// Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].dailyEntries)
-const getThisDaysEntryIds = (thisDay) => {
+// Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].entries)
+const getThisDaysids = (thisDay) => {
   let dayIdsArray = []
-  dayIdsArray = thisDay.items.map((item) => item.entryID)
+  dayIdsArray = thisDay.items.map((item) => item.id)
   return dayIdsArray
 }
 
 // Create a new array by filtering ALL_ENTRIES with current days ids
-const getEntriesDromDayIds = (allBulletEntries, thisDaysEntryIds) => {
-  const dailyEntries = allBulletEntries.filter((entry, index) => {
-    if (thisDaysEntryIds.includes(entry.id)) {
+const getEntriesDromDayIds = (allBulletEntries, thisDaysids) => {
+  const entries = allBulletEntries.filter((entry, index) => {
+    if (thisDaysids.includes(entry.id)) {
       return entry
     }
   })
 
-  return dailyEntries
+  return entries
 }
 
 // Day specific data such as migrated and order now should be merged to build out the rows with all the data needed for each item
@@ -115,7 +115,7 @@ const mergeBulletEntriesDataWithDailyData = (bulletEntriesForThisDay, thisDaysSp
   if (bulletEntriesForThisDay > 0 && thisDaysSpecificData > 0) {
     newData = bulletEntriesForThisDay.map((entry) => {
       const { migrated, order } = thisDaysSpecificData.find(
-        (daySpecificEntry) => daySpecificEntry.entryID === entry.ID,
+        (daySpecificEntry) => daySpecificEntry.id === entry.ID,
       )
       return { ...entry, migrated, order }
     })
@@ -123,7 +123,7 @@ const mergeBulletEntriesDataWithDailyData = (bulletEntriesForThisDay, thisDaysSp
   }
 }
 
-// if this items dayPriorityRanking is null then something has gone wrong 🤯, it shouldn't because each item should only update
+// if this items priorityRanking is null then something has gone wrong 🤯, it shouldn't because each item should only update
 // on user action (adding/removing/editing)
 // but never feat 🦸‍♂️ >> if null then lets just assign it an order ranking based on the timestamp it was created!
 // but oh no! 🤯 >> we will have to update the ALL_DAYS store AND the local state data!
@@ -143,7 +143,7 @@ const addRankingAfterSort = (entriesOldToNew) => {
   if (entriesOldToNew.length > 0) {
     entriesWithRankings = entriesOldToNew.forEach((entry, index) => ({
       ...entry,
-      dayPriorityRanking: index + 1,
+      priorityRanking: index + 1,
     })) // !important naughty naughty index 😉
   }
   return entriesWithRankings
@@ -168,7 +168,7 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
 
     const [x, setX] = useState(null)
 
-    const [localDailyEntries, setLocalDailyEntries] = useState(null) // TODO: Move to daily store
+    const [localentries, setLocalentries] = useState(null) // TODO: Move to daily store
 
     useEffect(() => {
       console.tron.log("got bullet entries", JSON.stringify(bulletEntries, null, 2))
@@ -199,8 +199,8 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
       bulletEntriesStore.saveBulletEntries(newBulletEntries)
     }
 
-    const removeBulletEntry = (entryId = "52669457-0ee4-4094-bc41-5d63349619a8") => {
-      const newBulletEntries = bulletEntries.filter((entry) => entryId !== entry.id)
+    const removeBulletEntry = (id = "52669457-0ee4-4094-bc41-5d63349619a8") => {
+      const newBulletEntries = bulletEntries.filter((entry) => id !== entry.id)
       bulletEntriesStore.saveBulletEntries(newBulletEntries)
     }
 

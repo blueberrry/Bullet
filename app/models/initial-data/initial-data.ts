@@ -87,35 +87,35 @@ export const INITIAL_ALL_DAYS = {
     {
       id: "5b122234-4931-4037-8347-f662739ba01b",
       date: "20220823",
-      dailyEntries: [
+      entriesDetails: [
         {
-          entryId: "aad640ce-76de-4a3a-86dc-6cf45750fe0c",
-          dayPriorityRanking: null,
+          id: "aad640ce-76de-4a3a-86dc-6cf45750fe0c",
+          priorityRanking: null,
           migrated: false,
         },
         {
-          entryId: "5b122234-4931-4037-8347-f662739ba01b",
-          dayPriorityRanking: null,
+          id: "5b122234-4931-4037-8347-f662739ba01b",
+          priorityRanking: null,
           migrated: false,
         },
         {
-          entryId: "0c623dc4-36a1-4485-a68d-a03cc223924d",
-          dayPriorityRanking: null,
+          id: "0c623dc4-36a1-4485-a68d-a03cc223924d",
+          priorityRanking: null,
           migrated: false,
         },
         {
-          entryId: "36eb2f2b-a213-43c3-aee5-ef7035a91989",
-          dayPriorityRanking: null,
+          id: "36eb2f2b-a213-43c3-aee5-ef7035a91989",
+          priorityRanking: null,
           migrated: false,
         },
         {
-          entryId: "5ac99dc5-ee8f-414c-ae40-afb9580cdb5b",
-          dayPriorityRanking: null,
+          id: "5ac99dc5-ee8f-414c-ae40-afb9580cdb5b",
+          priorityRanking: null,
           migrated: false,
         },
         {
-          entryId: "f0c906d1-b152-472a-bb58-3aa9fd5f75f2",
-          dayPriorityRanking: null,
+          id: "f0c906d1-b152-472a-bb58-3aa9fd5f75f2",
+          priorityRanking: null,
           migrated: false,
         },
       ],
@@ -123,10 +123,10 @@ export const INITIAL_ALL_DAYS = {
     {
       id: "aad640ce-76de-4a3a-86dc-6cf45750fe0c",
       date: "20220824",
-      dailyEntries: [
+      entriesDetails: [
         {
-          entryId: "7b9a7d5a-357e-4c66-b8ff-96de3cc71bf6",
-          dayPriorityRanking: null,
+          id: "7b9a7d5a-357e-4c66-b8ff-96de3cc71bf6",
+          priorityRanking: null,
           migrated: false,
         },
       ],
@@ -134,10 +134,10 @@ export const INITIAL_ALL_DAYS = {
     {
       id: "5ac99dc5-ee8f-414c-ae40-afb9580cdb5b",
       date: "20220825",
-      dailyEntries: [
+      entriesDetails: [
         {
-          entryId: "44d16208-db00-4db7-b242-386d0eeca115",
-          dayPriorityRanking: null,
+          id: "44d16208-db00-4db7-b242-386d0eeca115",
+          priorityRanking: null,
           migrated: false,
         },
       ],
@@ -145,10 +145,10 @@ export const INITIAL_ALL_DAYS = {
     {
       id: "011cda35-73ca-487c-9460-f4e7f6afd36c",
       date: "20220826",
-      dailyEntries: [
+      entriesDetails: [
         {
-          entryId: "5e9fe3f0-7135-40fe-addb-668f60b15cfc",
-          dayPriorityRanking: null,
+          id: "5e9fe3f0-7135-40fe-addb-668f60b15cfc",
+          priorityRanking: null,
           migrated: false,
         },
       ],

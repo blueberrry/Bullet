@@ -1,7 +1,7 @@
 import { GeneralApiProblem } from "./api-problem"
 import { Character } from "../../models/character/character"
 import { BulletEntry } from "../../models/bullet-entry/bullet-entry"
-import { Day } from "../../models/all-days-day/all-days-day"
+import { Day } from "../../models/day/day"
 
 export interface User {
   id: number

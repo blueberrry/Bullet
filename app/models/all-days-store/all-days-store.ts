@@ -3,10 +3,11 @@ import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
 import { BulletEntryApi } from "../../services/api/bullet-entry-api"
 import { withEnvironment } from "../extensions/with-environment"
-import { Day, DayModel, DaySnapshotIn, DaySnapshotOut } from "../all-days-day/all-days-day"
+import { Day, DayModel, DaySnapshotIn, DaySnapshotOut } from "../day/day"
 import { AllDaysApi } from "../../services/api/all-days-api"
 import { INITIAL_ALL_DAYS } from "../initial-data/initial-data"
 import { YYYYMMDD } from "../../types/types"
+import { EntryDetailsForDateSpan } from "../entry-details-for-datespan/entry-details-for-datespan"
 
 /**
  * All Days store
@@ -46,13 +47,19 @@ export const AllDaysStoreModel = types
   }))
   .actions((self) => ({
     addNextDay: (date: YYYYMMDD) => {
-      const nextDay = { id: uuidv4(), date, dailyEntries: [] }
+      // const nextDay = { id: uuidv4(), date, entriesDetails: [] }
+      const id = uuidv4()
+      const nextDay = DayModel.create({
+        id,
+        date,
+        // entriesDetails: [{ id: "", priorityRanking: null, migrated: false }],
+      })
       self.allDays.push(nextDay)
     },
   }))
   .actions((self) => ({
     addSpecificDay: (date: YYYYMMDD) => {
-      const nextDay = { id: uuidv4(), date, dailyEntries: [] }
+      const nextDay = { id: uuidv4(), date, entriesDetails: [] }
       self.allDays.push(nextDay)
     },
   }))
@@ -62,7 +69,7 @@ export const AllDaysStoreModel = types
     },
   }))
 
-// getSpecificDaysEntryIdsByDayId
+// getSpecificDaysidsByDayId
 //
 
 export interface AllDaysStore extends Instance<typeof AllDaysStoreModel> {}

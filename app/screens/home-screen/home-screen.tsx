@@ -62,6 +62,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
     const { bulletEntries } = bulletEntriesStore
     const { allDays } = allDaysStore
 
+    React.useEffect(() => {
+      console.tron.log("🚀 ~ file: home-screen.tsx ~ line 64 ~ allDays", allDays)
+    }, [allDays])
+
     // TODO: Once backend completed we should fetch on mount similar to this
     // useEffect(() => {
     //   function fetchTempInitialData() {

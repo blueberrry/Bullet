@@ -4,7 +4,7 @@
 export const getEntriesForSelectedDateSpan = (allBulletEntries, entriesForThisDate) => {
   if (allBulletEntries.length > 0 && entriesForThisDate.length > 0) {
     return entriesForThisDate.map((entryForThisDate) => {
-      const matchedEntry = allBulletEntries.find((entry) => entry.id === entryForThisDate.entryId)
+      const matchedEntry = allBulletEntries.find((entry) => entry.id === entryForThisDate.id)
       if (matchedEntry) {
         return { ...matchedEntry, ...entryForThisDate }
       }
@@ -26,22 +26,22 @@ export const getEntriesForSelectedDateSpan = (allBulletEntries, entriesForThisDa
 // }
 
 // Get days entry ids in all-days-store
-// Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].dailyEntries)
-export const getThisDaysEntryIds = (thisDay) => {
+// Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].entries)
+export const getThisDaysids = (thisDay) => {
   let dayIdsArray = []
-  dayIdsArray = thisDay.items.map((item) => item.entryID)
+  dayIdsArray = thisDay.items.map((item) => item.id)
   return dayIdsArray
 }
 
 // Create a new array by filtering ALL_ENTRIES with current days ids
-export const getEntriesDromDayIds = (allBulletEntries, thisDaysEntryIds) => {
-  const dailyEntries = allBulletEntries.filter((entry, index) => {
-    if (thisDaysEntryIds.includes(entry.id)) {
+export const getEntriesDromDayIds = (allBulletEntries, thisDaysids) => {
+  const entries = allBulletEntries.filter((entry, index) => {
+    if (thisDaysids.includes(entry.id)) {
       return entry
     }
   })
 
-  return dailyEntries
+  return entries
 }
 
 // Day specific data such as migrated and order now should be merged to build out the rows with all the data needed for each item
@@ -55,7 +55,7 @@ export const mergeBulletEntriesDataWithDailyData = (
   if (bulletEntriesForThisDay > 0 && thisDaysSpecificData > 0) {
     newData = bulletEntriesForThisDay.map((entry) => {
       const { migrated, order } = thisDaysSpecificData.find(
-        (daySpecificEntry) => daySpecificEntry.entryID === entry.ID,
+        (daySpecificEntry) => daySpecificEntry.id === entry.ID,
       )
       return { ...entry, migrated, order }
     })
@@ -64,7 +64,7 @@ export const mergeBulletEntriesDataWithDailyData = (
   return newData
 }
 
-// if this items dayPriorityRanking is null then something has gone wrong 🤯, it shouldn't because each item should only update
+// if this items priorityRanking is null then something has gone wrong 🤯, it shouldn't because each item should only update
 // on user action (adding/removing/editing)
 // but never feat 🦸‍♂️ >> if null then lets just assign it an order ranking based on the timestamp it was created!
 // but oh no! 🤯 >> we will have to update the ALL_DAYS store AND the local state data!
@@ -84,7 +84,7 @@ export const addRankingAfterSort = (entriesOldToNew) => {
   if (entriesOldToNew.length > 0) {
     entriesWithRankings = entriesOldToNew.forEach((entry, index) => ({
       ...entry,
-      dayPriorityRanking: index + 1,
+      priorityRanking: index + 1,
     })) // !important naughty naughty index 😉
   }
   return entriesWithRankings

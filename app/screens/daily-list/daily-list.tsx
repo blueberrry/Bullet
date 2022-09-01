@@ -34,7 +34,7 @@ export const DailyList: FC<StackScreenProps<NavigatorParamList, "dailyList">> = 
         {
           id: "osefeop-sfesef-ef-sfe-f",
           date: "day",
-          dailyEntries: [{ entryId: "fsiodjfidsf", dayPriorityRanking: null, migrated: true }],
+          entries: [{ id: "fsiodjfidsf", priorityRanking: null, migrated: true }],
         },
       ]
       allDaysStore.saveAllDays(newAllDays)
