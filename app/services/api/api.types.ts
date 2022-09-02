@@ -20,6 +20,6 @@ export type GetBulletEntriesResult =
 
 export type GetBulletEntryResult = { kind: "ok"; bulletEntry: BulletEntry } | GeneralApiProblem
 
-export type GetAllDaysResult = { kind: "ok"; allDays: Day[] } | GeneralApiProblem
+export type GetDaysResult = { kind: "ok"; days: Day[] } | GeneralApiProblem
 
 export type GetDayResult = { kind: "ok"; day: Day } | GeneralApiProblem

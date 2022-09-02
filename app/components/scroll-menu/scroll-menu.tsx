@@ -9,6 +9,7 @@ import CircularProgress from "react-native-circular-progress-indicator"
 import { AntDesign, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons"
 import {
   DELETE_BTN_STYLES,
+  FIRST_ACTION,
   HORIZONTAL_SCROLL_MENU_STYLES,
   PREVIEW_CONTAINER_STYLE,
   PREVIEW_ITEMS_CONTAINER_STYLES,
@@ -24,7 +25,7 @@ import { ScrollMenuProps, ScrollMenuBtnProps, ScrollMenuProgressProps } from "./
 import { Button } from "../button/button"
 import { convertDateToYYYYMMDD } from "../../utils/date-formatting"
 import { DayPicker } from "../day-picker-calendar/day-picker-calendar"
-import { AddDateMenu } from "../select-date-menu-modal/select-date-menu-modal"
+import { GestureModal } from "../gesture-modal/gesture-modal"
 
 /**
  *
@@ -87,15 +88,17 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
           </View>
         }
       />
-      <AddDateMenu
+      <GestureModal
         modalVisible={dateMenuVisible}
         setModalVisible={setDateMenuVisible}
         animateModal={animateDateMenu}
         setAnimateModal={setAnimateDateMenu}
+        title="Add Day"
       >
-        <Text>Add day</Text>
         <Button
           text="Add next day"
+          preset="secondary"
+          style={FIRST_ACTION}
           onPress={() => {
             addNextDay()
             setAnimateDateMenu(true)
@@ -104,20 +107,21 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
         />
         <Button
           text="Add specific day"
+          preset="secondary"
           onPress={() => {
             setDateMenuVisible(false)
             setDatePickerVisible(true)
             // setanimateModal(true)
           }}
         />
-      </AddDateMenu>
-      <AddDateMenu
+      </GestureModal>
+      <GestureModal
         modalVisible={datePickerVisble}
         setModalVisible={setDatePickerVisible}
         animateModal={animateDatePicker}
         setAnimateModal={setAnimateDatePicker}
+        title="Add Date"
       >
-        <Text>Add day</Text>
         <DayPicker
           dates={datesOnly}
           handleDayPress={(dayObj) => {
@@ -127,7 +131,7 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
             setDatePickerVisible(false)
           }}
         />
-      </AddDateMenu>
+      </GestureModal>
     </>
   )
 }

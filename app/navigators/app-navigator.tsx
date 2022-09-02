@@ -13,6 +13,7 @@ import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { DailyList } from "../screens/daily-list/daily-list"
 import { BulletBacklog } from "../screens/bullet-backlog/bullet-backlog"
 import { HomeScreen } from "../screens/home-screen/home-screen"
+import { AllEntries } from "../screens/all-entries/all-entries"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -27,7 +28,9 @@ import { HomeScreen } from "../screens/home-screen/home-screen"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type NavigatorParamList = {
+  // TODO: Undefined types
   welcome: undefined
+  allEntries: undefined
   homeScreen: undefined
   demoList: undefined
   bulletBacklog: undefined
@@ -48,9 +51,10 @@ const AppStack = () => {
     >
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="homeScreen" component={HomeScreen} />
-      <Stack.Screen name="demoList" component={DemoListScreen} />
+      <Stack.Screen name="allEntries" component={AllEntries} />
       <Stack.Screen name="bulletBacklog" component={BulletBacklog} />
       <Stack.Screen name="dailyList" component={DailyList} />
+      <Stack.Screen name="demoList" component={DemoListScreen} />
       {/** 🔥 Your screens go here */}
     </Stack.Navigator>
   )

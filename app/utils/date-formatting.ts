@@ -9,8 +9,8 @@ export const convertDateToYYYYMMDD = (date) => {
 }
 
 // TODO: Diff between snapshot in/out
-export const getLatestDate = (allDays: DaySnapshotOut[]) => {
-  const datesArrayAsNumbers = allDays.map((day) => parseInt(day.date, 10))
+export const getLatestDate = (days: DaySnapshotOut[]) => {
+  const datesArrayAsNumbers = days.map((day) => parseInt(day.date, 10))
   const latestDate = Math.max(...datesArrayAsNumbers)
   return latestDate.toString()
 }

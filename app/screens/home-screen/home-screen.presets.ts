@@ -1,23 +1,10 @@
 import { ImageStyle, TextStyle, ViewStyle } from "react-native"
 import { color, spacing } from "../../theme"
-
-export const FULL: ViewStyle = { flex: 1 }
+import { BOLD } from '../../theme/global-consts'
 
 export const CONTAINER: ViewStyle = {
   backgroundColor: color.transparent,
   paddingHorizontal: spacing[4],
-}
-export const DEMO: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-  backgroundColor: color.palette.deepPurple,
-}
-export const BOLD: TextStyle = { fontWeight: "bold" }
-
-export const DEMO_TEXT: TextStyle = {
-  ...BOLD,
-  fontSize: 13,
-  letterSpacing: 2,
 }
 
 export const HEADER: TextStyle = {

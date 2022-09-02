@@ -6,7 +6,7 @@ import { EntryDetailsForDateSpan } from "../entry-details-for-datespan/entry-det
  */
 
 export const DayModel = types.model("Day").props({
-  id: types.maybe(types.identifier),
+  id: types.maybe(types.identifier || types.string),
   date: types.maybe(types.string), // types.maybe(type) makes a type optional and nullable, types.string should be todo|completed|note|inspirationIdeas|deleted  // !important types.maybe(types.number || types.string), caused the error
   // entries: types.maybe(types.array(entriesModel), []),
   entriesDetails: types.optional(types.array(EntryDetailsForDateSpan), []), // TODO: Should this be optional? When we create a new day, it adds entriesDetails: [] without types.optional

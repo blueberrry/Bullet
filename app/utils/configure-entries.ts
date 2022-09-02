@@ -2,6 +2,7 @@
 
 // Unsure which store to put this action in
 export const getEntriesForSelectedDateSpan = (allBulletEntries, entriesForThisDate) => {
+  debugger
   if (allBulletEntries.length > 0 && entriesForThisDate.length > 0) {
     return entriesForThisDate.map((entryForThisDate) => {
       const matchedEntry = allBulletEntries.find((entry) => entry.id === entryForThisDate.id)
@@ -14,16 +15,6 @@ export const getEntriesForSelectedDateSpan = (allBulletEntries, entriesForThisDa
   console.tron.warn("no bullet entries or no daily/weekly/monthly entries")
   return []
 }
-
-// Get this day data from ALL_DAYS (ALL_DAYS_INITIAL_DATA[0])
-// TODO: Moved to all-days-store getSpecificDayById
-// export const getThisDay = (dayId, allDays) => {
-//   let thisDay = {} // TODO: types
-//   if (allDays.length > 0) {
-//     thisDay = allDays.find((day) => day.dayId === dayId)
-//   }
-//   return thisDay
-// }
 
 // Get days entry ids in all-days-store
 // Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].entries)

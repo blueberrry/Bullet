@@ -71,6 +71,8 @@ export const PROGRESS_CONTAINER_STYLES: ViewStyle = {
 
 export const SCROLL_MENU_PROGRESS_STYLES: TextStyle = { fontWeight: "normal", fontSize: 17 }
 
+export const FIRST_ACTION = { marginBottom: spacing[1] }
+
 /**
  * All the variations of text styling within the app.
  *

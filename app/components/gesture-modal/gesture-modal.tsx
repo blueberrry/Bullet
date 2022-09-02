@@ -2,8 +2,9 @@ import React, { useState } from "react"
 import { TouchableOpacity, View } from "react-native"
 import { SafeAreaView, useSafeAreaFrame } from "react-native-safe-area-context"
 import SwipeUpDownModal from "react-native-swipe-modal-up-down"
+import { Text } from "../../components/text/text"
 import { spacing } from "../../theme"
-import { SelectDateMenuModalProps } from "./select-date-menu-modal.props"
+import { GestureModalProps } from "./gesture-modal.props"
 
 const MODAL_CONTAINER_STYLES = {
   marginTop: 300, // Default
@@ -21,25 +22,45 @@ const BACKGROUND_OVERLAY_BTN_STYLES = {
   width: "100%",
 }
 
-export const AddDateMenu = (props: SelectDateMenuModalProps) => {
-  const { modalVisible, setModalVisible, animateModal, setAnimateModal, children } = props
+export const GestureModal = (props: GestureModalProps) => {
+  const {
+    modalVisible,
+    setModalVisible,
+    animateModal,
+    setAnimateModal,
+    fillViewport = false,
+    title,
+    children,
+  } = props
   const [modalContentHeight, setModalContentHeight] = useState(0)
 
   const { height } = useSafeAreaFrame()
+
+  const MODAL_CONTAINER_MARGIN_TOP = { marginTop: !fillViewport ? modalContentHeight : 0 }
+  const MODAL_CONTENT_CONTAINER_HEIGHT = { height: !fillViewport ? "auto" : "100%" }
+
+  const BACKGROUND_OVERLAY_BTN_FLEX = { flex: !fillViewport ? 1 : 0 }
+  const BACKGROUND_OVERLAY_BTN_HEIGHT = { height: !fillViewport ? "auto" : 0 }
 
   return (
     <SafeAreaView>
       <SwipeUpDownModal
         modalVisible={modalVisible}
         PressToanimate={animateModal}
-        ContentModalStyle={{ MODAL_CONTAINER_STYLES, marginTop: modalContentHeight }}
+        ContentModalStyle={{ ...MODAL_CONTAINER_STYLES, ...MODAL_CONTAINER_MARGIN_TOP }}
         ContentModal={
           <View
-            style={MODAL_CONTENT_CONTAINER_STYLES}
+            // pointerEvents="none"
+            onStartShouldSetResponder={() => true} // View responds to start of touch
+            style={{
+              ...MODAL_CONTENT_CONTAINER_STYLES,
+              ...MODAL_CONTENT_CONTAINER_HEIGHT,
+            }}
             onLayout={(e) => {
-              setModalContentHeight(height - e.nativeEvent.layout.height)
+              !fillViewport && setModalContentHeight(height - e.nativeEvent.layout.height)
             }}
           >
+            {title && <Text>{title}</Text>}
             {children}
           </View>
         }
@@ -47,7 +68,11 @@ export const AddDateMenu = (props: SelectDateMenuModalProps) => {
         HeaderContent={
           <View>
             <TouchableOpacity
-              style={{ ...BACKGROUND_OVERLAY_BTN_STYLES, height: modalContentHeight }}
+              style={{
+                ...BACKGROUND_OVERLAY_BTN_STYLES,
+                ...BACKGROUND_OVERLAY_BTN_FLEX,
+                ...BACKGROUND_OVERLAY_BTN_HEIGHT,
+              }}
               onPress={() => {
                 // setModalVisible(false)
                 setAnimateModal(true)

@@ -10,49 +10,13 @@ export const DailyList: FC<StackScreenProps<NavigatorParamList, "dailyList">> = 
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
 
-    const { bulletEntriesStore, allDaysStore } = useStores()
-    // const { bulletEntries } = bulletEntriesStore
-    const { allDays } = allDaysStore
-
-    console.tron.log(
-      "🚀 ~ file: daily-list.tsx ~ line 15 ~ allDaysStore",
-      JSON.stringify(allDaysStore, null, 2),
-    )
+    const { bulletEntriesStore, daysStore } = useStores()
+    const { days } = daysStore
 
     async function fetchData() {
-      await allDaysStore.getAllDays()
-      // await allDaysStore.getAllDays()
+      await daysStore.getDays()
     }
 
-    const saveDays = () => {
-      allDaysStore.getAllDaysStore()
-    }
-
-    const addNewDay = (newEntry = undefined) => {
-      const newAllDays = [
-        ...allDays,
-        {
-          id: "osefeop-sfesef-ef-sfe-f",
-          date: "day",
-          entries: [{ id: "fsiodjfidsf", priorityRanking: null, migrated: true }],
-        },
-      ]
-      allDaysStore.saveAllDays(newAllDays)
-    }
-
-    return (
-      <ScrollView>
-        <Button text="console.tron save days" onPress={saveDays} />
-        <Text>{JSON.stringify(allDaysStore, null, 2)}</Text>
-        <Button text="Get all days" onPress={fetchData} />
-        <Button text="Add new days" onPress={addNewDay} />
-      </ScrollView>
-    )
+    return <ScrollView>{JSON.stringify(days, null, 2)}</ScrollView>
   },
 )
-
-// .actions((self) => ({
-//   getAllDaysStore: () => {
-//     console.tron.log("🚀 ~ file: all-days-store.ts ~ line 33 ~ .actions ~ self", self)
-//   },
-// }))

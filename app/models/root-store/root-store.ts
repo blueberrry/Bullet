@@ -1,7 +1,7 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { CharacterStoreModel } from "../character-store/character-store"
 import { BulletEntriesStoreModel } from "../bullet-entries-store/bullet-entries-store"
-import { AllDaysStoreModel } from "../all-days-store/all-days-store"
+import { DaysStoreModel } from "../days-store/days-store"
 /**
  * A RootStore model.
  */
@@ -9,7 +9,7 @@ import { AllDaysStoreModel } from "../all-days-store/all-days-store"
 export const RootStoreModel = types.model("RootStore").props({
   characterStore: types.optional(CharacterStoreModel, {} as any),
   bulletEntriesStore: types.optional(BulletEntriesStoreModel, {} as any),
-  allDaysStore: types.optional(AllDaysStoreModel, {} as any)
+  daysStore: types.optional(DaysStoreModel, {} as any)
 })
 
 /**

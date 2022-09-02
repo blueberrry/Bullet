@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`can add new items 1`] = `
+Object {
+  "bulletEntries": Array [
+    Object {
+      "dateCreated": 123456,
+      "id": "unique-id-string-2",
+      "status": "note",
+      "text": "Build a plant wall",
+    },
+  ],
+}
+`;
+
+exports[`can add new items 2`] = `
+Array [
+  Object {
+    "bulletEntries": Array [
+      Object {
+        "dateCreated": 123456,
+        "id": "unique-id-string-2",
+        "status": "inspirationalIdeas",
+        "text": "Build a plant wall",
+      },
+    ],
+  },
+  Object {
+    "bulletEntries": Array [
+      Object {
+        "dateCreated": 123456,
+        "id": "unique-id-string-2",
+        "status": "note",
+        "text": "Build a plant wall",
+      },
+    ],
+  },
+]
+`;
+
+exports[`can change the status 1`] = `
+Array [
+  Object {
+    "op": "add",
+    "path": "/bulletEntries/0",
+    "value": Object {
+      "dateCreated": 123456,
+      "id": "unique-id-string-3",
+      "status": "inspirationalIdeas",
+      "text": "Build a plant wall",
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/bulletEntries/0/status",
+    "value": "todo",
+  },
+]
+`;
+
+exports[`can change the text 1`] = `
+Array [
+  Object {
+    "op": "add",
+    "path": "/bulletEntries/0",
+    "value": Object {
+      "dateCreated": 123456,
+      "id": "unique-id-string-3",
+      "status": "inspirationalIdeas",
+      "text": "Build a plant wall",
+    },
+  },
+  Object {
+    "op": "replace",
+    "path": "/bulletEntries/0/text",
+    "value": "Visit low light polution area",
+  },
+]
+`;

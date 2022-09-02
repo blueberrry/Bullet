@@ -23,9 +23,6 @@ import { getLatestDate } from "../../utils/date-formatting"
 import { useStores } from "../../models"
 import {
   CONTAINER,
-  DEMO,
-  DEMO_TEXT,
-  FULL,
   HEADER,
   HEADER_TITLE,
   HEART,
@@ -36,6 +33,7 @@ import {
   TAGLINE,
   TITLE,
 } from "./home-screen.presets"
+import { FULL } from "../../theme/global-consts"
 
 export const logoIgnite = require("./logo-ignite.png")
 export const heart = require("./heart.png")
@@ -58,26 +56,14 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
 
-    const { bulletEntriesStore, allDaysStore } = useStores()
+    const { bulletEntriesStore, daysStore } = useStores()
     const { bulletEntries } = bulletEntriesStore
-    const { allDays } = allDaysStore
-
-    React.useEffect(() => {
-      console.tron.log("🚀 ~ file: home-screen.tsx ~ line 64 ~ allDays", allDays)
-    }, [allDays])
+    const { days } = daysStore
 
     // TODO: Once backend completed we should fetch on mount similar to this
-    // useEffect(() => {
-    //   function fetchTempInitialData() {
-    //     allDaysStore.getInitialAllDaysForTesting()
-    //     bulletEntriesStore.getInitialBulletEntriesForTesting()
-    //   }
-
-    //   fetchTempInitialData()
-    // }, [])
 
     const fetchTempInitialData = () => {
-      allDaysStore.getInitialAllDaysForTesting()
+      daysStore.getDaysTest()
       bulletEntriesStore.getInitialBulletEntriesForTesting()
     }
 
@@ -91,24 +77,24 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
     const addNextDay = () => {
       let nextDate // TODO: type for string YYYYMMDD
       // If there is daily data, increment the next day date and add to array
-      if (allDays.length > 0) {
+      if (days.length > 0) {
         // Gets highest date and sets the nextDate as the subsequent day
-        const highestDateString = getLatestDate(allDays)
+        const highestDateString = getLatestDate(days)
         nextDate = moment(highestDateString).add(1, "days").format("YYYYMMDD")
       } else {
         // If there is no daily data, add today as date
         nextDate = moment().format("YYYYMMDD")
       }
-      allDaysStore.addNextDay(nextDate)
+      daysStore.addNextDay(nextDate)
     }
 
     const addSpecificDay = (newDate) => {
-      allDaysStore.addSpecificDay(newDate)
+      // daysStore.addSpecificDay(newDate)
     }
 
     const removeSpecificDay = (date) => {
-      const newDaysData = allDays.filter((day) => day.date !== date)
-      allDaysStore.saveAllDays(newDaysData)
+      const newDaysData = days.filter((day) => day.date !== date)
+      daysStore.saveDays(newDaysData)
     }
 
     const demoReactotron = React.useMemo(
@@ -171,7 +157,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
           <View>
             <BulletItem text="Daily Entries">
               <ScrollMenu
-                entries={[...allDays]}
+                entries={[...days]}
                 allBulletEntries={bulletEntries}
                 navigateToScreen={navigateToDay}
                 addNextDay={addNextDay}
@@ -184,7 +170,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
           <View>
             <Text>Weeklies</Text>
             {/* <ScrollMenu
-              entries={[...allDays]}
+              entries={[...weeks]}
               allBulletEntries={bulletEntries}
               navigateToScreen={navigateToDay}
               addDate={addNextDay}
@@ -194,29 +180,26 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
             <Button text="Add next day" onPress={addNextDay} /> */}
           </View>
           <View>
-            <Button
-              style={DEMO}
-              textStyle={DEMO_TEXT}
-              tx="demoScreen.reactotron"
-              onPress={demoReactotron}
-            />
+            <Button preset="secondary" tx="demoScreen.reactotron" onPress={demoReactotron} />
             <Text style={HINT} tx={`demoScreen.${Platform.OS}ReactotronHint` as const} />
           </View>
           <Button
-            style={DEMO}
-            textStyle={DEMO_TEXT}
+            preset="secondary"
             tx="demoScreen.demoList"
             onPress={() => navigation.navigate("demoList")}
           />
           <Button
-            style={DEMO}
-            textStyle={DEMO_TEXT}
-            text="Entries backlog"
+            preset="secondary"
+            text="All Entries"
+            onPress={() => navigation.navigate("allEntries")}
+          />
+          <Button
+            preset="secondary"
+            text="Backlog"
             onPress={() => navigation.navigate("bulletBacklog")}
           />
           <Button
-            style={DEMO}
-            textStyle={DEMO_TEXT}
+            preset="secondary"
             text="Daily list"
             onPress={() => navigation.navigate("dailyList")}
           />

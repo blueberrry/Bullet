@@ -10,10 +10,7 @@ export const useConfigureDayPickerDates = (dates: string[]) => {
   if (dates.length > 0) {
     dates.forEach((date) => {
       const formatDateForPicker = moment(date).format("YYYY-MM-DD")
-      console.tron.log(
-        "🚀 ~ file: scroll-menu.tsx ~ line 39 ~ dates.forEach ~ formatDateForPicker",
-        formatDateForPicker,
-      )
+
       const newEntry = {
         [formatDateForPicker]: {
           disabled: true,

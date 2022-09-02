@@ -1,9 +1,9 @@
-import React, { useEffect, FC, useState } from "react"
+import React, { useEffect, FC, useState, useMemo } from "react"
 import { FlatList, TextStyle, View, ViewStyle, ImageStyle, TouchableOpacity } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 
-// !important - this isn't functioning as a backlog, this is an `all items` page 
+// !important - this isn't functioning as a backlog, this is an `all items` page
 
 import {
   Header,
@@ -12,12 +12,20 @@ import {
   GradientBackground,
   Button,
   BulletItem,
+  TextField,
 } from "../../components"
 import { color, spacing } from "../../theme"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
+import { Text } from "../../components/text/text" // TODO: Change to AppText
+import { BulletEntryModel, BulletEntry } from "../../models/bullet-entry/bullet-entry"
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
 import DraggableBulletList from "../../components/draggable-bullet-list/draggable-bullet-list"
+import { clone } from "mobx-state-tree"
+import Preview from "@storybook/react-native/dist/preview"
+import { Footer } from "../../components/footer/footer"
+import { GestureModal } from "../../components/gesture-modal/gesture-modal"
+import { save } from "../../utils/storage"
 
 // TODO: Implement moment lib
 
@@ -35,61 +43,8 @@ import DraggableBulletList from "../../components/draggable-bullet-list/draggabl
  *
  **/
 
-const ALL_DAYS_INITIAL_IDS = [
-  "5b122234-4931-4037-8347-f662739ba01b",
-  "aad640ce-76de-4a3a-86dc-6cf45750fe0c",
-  "5ac99dc5-ee8f-414c-ae40-afb9580cdb5b",
-  "011cda35-73ca-487c-9460-f4e7f6afd36c",
-]
-
-const ALL_DAYS_INITIAL_DATA = [
-  {
-    id: ALL_DAYS_INITIAL_IDS[0], // TODO: Or Date.now()/day()
-    date: "day",
-    entriesDetails: [
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-    ],
-  },
-  {
-    id: ALL_DAYS_INITIAL_IDS[1],
-    date: "day",
-    entriesDetails: [
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-    ],
-  },
-  {
-    id: ALL_DAYS_INITIAL_IDS[2],
-    date: "day",
-    entriesDetails: [
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-    ],
-  },
-  {
-    id: ALL_DAYS_INITIAL_IDS[3],
-    date: "day",
-    entriesDetails: [
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-    ],
-  },
-]
-
-const DAILY_ENTRIES_INITIAL_DATA = ALL_DAYS_INITIAL_DATA[0].entriesDetails
-
-const TEMP_DAY_ID = "ac5f2861-4a9e-42ce-b4f5-c06f21b84dfd"
-
-// TODO: Change ID to Id
-
 // Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].entries)
-const getThisDaysids = (thisDay) => {
+const getThisDaysIds = (thisDay) => {
   let dayIdsArray = []
   dayIdsArray = thisDay.items.map((item) => item.id)
   return dayIdsArray
@@ -102,7 +57,6 @@ const getEntriesDromDayIds = (allBulletEntries, thisDaysids) => {
       return entry
     }
   })
-
   return entries
 }
 
@@ -157,21 +111,17 @@ const addRankingAfterSort = (entriesOldToNew) => {
 // TODO: Create dailystore with expanded vals (see notebook)
 // order  then fall back to timestamp
 
-export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBacklog">> = observer(
+export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
 
-    const { bulletEntriesStore, daysStore } = useStores()
+    const { bulletEntriesStore } = useStores()
     const { bulletEntries } = bulletEntriesStore
-    const { days } = daysStore
 
-    const [x, setX] = useState(null)
-
-    const [localentries, setLocalentries] = useState(null) // TODO: Move to daily store
-
-    useEffect(() => {
-      console.tron.log("got bullet entries", JSON.stringify(bulletEntries, null, 2))
-    }, [bulletEntries])
+    const [textEntryVisible, setTextEntryVisible] = useState(false)
+    const [animateTextEntry, setAnimateTextEntry] = useState(false)
+    const [entryText, setEntryText] = useState("")
+    console.tron.log("🚀 ~ file: all-entries.tsx ~ line 123 ~ entryText", entryText)
 
     //       Surely the day component should only be passed the _days_ data as props and allEntries data
     //       We will getch initial day data here for now
@@ -185,21 +135,21 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
     // }, [])
 
     const addBulletEntry = (newEntry = undefined) => {
-      const newBulletEntries = [
-        ...bulletEntries,
-        {
-          id: "52669457-0ee4-4094-bc41-5d63349619a8",
-          status: "todo",
-          text: "Newest entry",
-          dateCreated: Date.now(),
-        },
-      ]
-      bulletEntriesStore.saveBulletEntries(newBulletEntries)
+      // const newBulletEntries = [
+      //   ...bulletEntries,
+      //   {
+      //     id: "52669457-0ee4-4094-bc41-5d63349619a8",
+      //     status: "todo",
+      //     text: "Newest entry",
+      //     dateCreated: Date.now(),
+      //   },
+      // ]
+      // bulletEntriesStore.saveBulletEntries(newBulletEntries)
     }
 
     const removeBulletEntry = (id = "52669457-0ee4-4094-bc41-5d63349619a8") => {
-      const newBulletEntries = bulletEntries.filter((entry) => id !== entry.id)
-      bulletEntriesStore.saveBulletEntries(newBulletEntries)
+      // const newBulletEntries = bulletEntries.filter((entry) => id !== entry.id)
+      // bulletEntriesStore.saveBulletEntries(newBulletEntries)
     }
 
     // TODO: BulletList component should be created, a flatlist where we can drag and drop to re-order (from draggable indicator)
@@ -212,26 +162,23 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
     // TODO: If order null from pageData, calculate by timestamp.
     //       Create a function that assigned an iterative order value (1,2,3) based on earliest to latest dateCreated
 
-    const renderItem = ({ item, index, drag, isActive }) => {
-      const LIST_ITEM_STYLES = { backgroundColor: isActive ? "blue" : "grey" }
-      return (
-        <ScaleDecorator>
-          <TouchableOpacity onLongPress={drag} style={LIST_ITEM_STYLES}>
-            {/* <Image source={{ uri: item.image }} style={IMAGE} /> */}
-            {/* <Text style={LIST_TEXT}>entry id: {item.id}</Text>
-      <Text style={LIST_TEXT}>entry status: {item.status}</Text>
-      <Text style={LIST_TEXT}>entry text: {item.text}</Text>
-    <Text style={LIST_TEXT}>entry dateCreated: {item.dateCreated}</Text> */}
-            <BulletItem text={item.text} />
-          </TouchableOpacity>
-        </ScaleDecorator>
-      )
+    const renderItem = ({ item, index }) => {
+      return <Entry {...item} />
     }
+
+    /**
+     * * Bullet entries pseudo
+     * * Add new bullet entry button at bottom / fixed
+     * * Default saves as 'todo'
+     * * Opens swipe modal with text input
+     * * Button for each 'todo' 'done' 'note' 'inspirationalIdeas'
+     * * Button for save
+     */
 
     return (
       <>
         <View testID="DemoListScreen" style={FULL}>
-          <GradientBackground colors={["#422443", "#281b34"]} />
+          <GradientBackground colors={["#422443", "#000000"]} />
           <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
             <Header
               // headerTx="demoListScreen.title"
@@ -241,11 +188,33 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
               style={HEADER}
               titleStyle={HEADER_TITLE}
             />
+            <Text>{`Total entries: ${bulletEntriesStore.totalBulletEntries}`}</Text>
 
-            <DraggableBulletList entries={[...bulletEntries]} />
-
-            <Button text="Add new bullet entry" onPress={addBulletEntry} />
-            <Button text="Remove new bullet entry/ies" onPress={() => removeBulletEntry()} />
+            {/* <DraggableBulletList entries={[...bulletEntries]} /> */}
+            <FlatList
+              data={[...bulletEntries]}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+            />
+            <Footer>
+              <Button
+                text="Add new bullet entry"
+                preset="secondary"
+                // onPress={() => bulletEntriesStore.addBulletEntry({ text: "hello" })}
+                onPress={() => setTextEntryVisible(true)}
+              />
+            </Footer>
+            <GestureModal
+              modalVisible={textEntryVisible}
+              setModalVisible={setTextEntryVisible}
+              animateModal={animateTextEntry}
+              setAnimateModal={setAnimateTextEntry}
+              fillViewport={true}
+              title="Add Day"
+            >
+              <AddEntryText />
+            </GestureModal>
+            {/* <Button text="Remove new bullet entry/ies" onPress={() => removeBulletEntry()} /> */}
             {/* <Button text="Change bullet entries" onPress={() => removeBulletEntry()} /> */}
             {/* <Button text="Migrate to daily (from flatlist item)" onPress={() => removeBulletEntry()} /> */}
             {/* <Button text="Migrate to weekly (from flatlist item)" onPress={() => removeBulletEntry()} /> */}
@@ -258,6 +227,83 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
     )
   },
 )
+
+export const Entry: FC<BulletEntry> = observer((props) => {
+  const { id, status, text, dateCreated, changeStatus } = props
+  console.tron.log(
+    "🚀 ~ file: all-entries.tsx ~ line 252 ~ constEntry:FC<BulletEntry>=observer ~ changeStatus",
+    changeStatus,
+  )
+
+  /// TODO: This doesnt' work
+  // const onChangeStatus = () => {}
+  return (
+    <View style={LIST_ITEM_STYLES}>
+      {/* <Image source={{ uri: item.image }} style={IMAGE} /> */}
+      {/* <Text style={LIST_TEXT}>entry id: {item.id}</Text>
+     
+      <Text style={LIST_TEXT}>entry text: {item.text}</Text>
+    <Text style={LIST_TEXT}>entry dateCreated: {item.dateCreated}</Text> */}
+
+      <BulletItem text={text} />
+      <Text style={LIST_TEXT}>status: {status}</Text>
+      {status === "todo" && (
+        <Button onPress={() => changeStatus && changeStatus("done")} text="mark done" />
+      )}
+    </View>
+  )
+})
+
+const ENTRY_TEXT_CONTAINER = {
+  flexDirection: "row",
+  // marginHorizontal: spacing[2],
+  justifyContent: "space-around",
+} as ViewStyle
+
+export const AddEntryText = observer((props) => {
+  // TODO: prop types
+  // const { onSave } = props;
+  const { bulletEntriesStore } = useStores()
+
+  const [entryText, setEntryText] = useState("")
+  const [status, setStatus] = useState("todo") // TODO: types, initial var
+
+  const saveEntry = () => {
+    bulletEntriesStore.addBulletEntry({ text: entryText, status })
+  }
+
+  const isSelected = useMemo(
+    // !important check if worth it for performance
+    () => (s: string) => s === status ? "selectedItem" : "selectItem",
+    [status],
+  )
+
+  return (
+    <>
+      <TextField
+        placeholder="type a new entry!"
+        onChangeText={(e) => {
+          setEntryText(JSON.stringify(e))
+        }}
+      />
+      <View style={ENTRY_TEXT_CONTAINER}>
+        <Button preset={isSelected("todo")} text="todo" onPress={() => setStatus("todo")} />
+        <Button preset={isSelected("done")} text="done" onPress={() => setStatus("done")} />
+        <Button preset={isSelected("note")} text="note" onPress={() => setStatus("note")} />
+        <Button
+          preset={isSelected("inspirationalIdeas")}
+          text="inspirationalIdeas"
+          onPress={() => setStatus("inspirationalIdeas")}
+        />
+      </View>
+      <Footer>
+        <Button text="save" preset="secondary" onPress={() => saveEntry()} />
+      </Footer>
+    </>
+  )
+})
+
+const LIST_ITEM_STYLES = { backgroundColor: "grey" }
 
 const FULL: ViewStyle = {
   flex: 1,
