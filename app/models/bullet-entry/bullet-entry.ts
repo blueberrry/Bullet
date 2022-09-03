@@ -14,10 +14,12 @@ export const BulletEntryModel = types
   .actions((self) => ({
     changeStatus: (newStatus) => {
       // TODO: Status types
+      debugger
       self.status = newStatus
     },
     changeText: (newText) => {
       // TODO: Status types
+      // could do if (id === props.id)
       self.text = newText
     },
   }))

@@ -21,7 +21,7 @@ import { Text } from "../../components/text/text" // TODO: Change to AppText
 import { BulletEntryModel, BulletEntry } from "../../models/bullet-entry/bullet-entry"
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
 import DraggableBulletList from "../../components/draggable-bullet-list/draggable-bullet-list"
-import { clone } from "mobx-state-tree"
+import { applySnapshot, clone, getSnapshot } from "mobx-state-tree"
 import Preview from "@storybook/react-native/dist/preview"
 import { Footer } from "../../components/footer/footer"
 import { GestureModal } from "../../components/gesture-modal/gesture-modal"
@@ -163,7 +163,10 @@ export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> 
     //       Create a function that assigned an iterative order value (1,2,3) based on earliest to latest dateCreated
 
     const renderItem = ({ item, index }) => {
-      return <Entry {...item} />
+      const cloneEntry = clone(item)
+      const saveStatus = () => applySnapshot(item, getSnapshot(cloneEntry))
+
+      return <Entry item={cloneEntry} onSaveStatus={saveStatus} key={`${item}-${index}`} />
     }
 
     /**
@@ -228,12 +231,13 @@ export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> 
   },
 )
 
-export const Entry: FC<BulletEntry> = observer((props) => {
-  const { id, status, text, dateCreated, changeStatus } = props
-  console.tron.log(
-    "🚀 ~ file: all-entries.tsx ~ line 252 ~ constEntry:FC<BulletEntry>=observer ~ changeStatus",
-    changeStatus,
-  )
+// TODO: types check
+export const Entry: FC<{ item: BulletEntry; onSaveStatus: () => void }> = observer((props) => {
+  const { item, onSaveStatus } = props
+  // console.tron.log(
+  //   "🚀 ~ file: all-entries.tsx ~ line 252 ~ constEntry:FC<BulletEntry>=observer ~ changeStatus",
+  //   changeStatus,
+  // )
 
   /// TODO: This doesnt' work
   // const onChangeStatus = () => {}
@@ -245,10 +249,16 @@ export const Entry: FC<BulletEntry> = observer((props) => {
       <Text style={LIST_TEXT}>entry text: {item.text}</Text>
     <Text style={LIST_TEXT}>entry dateCreated: {item.dateCreated}</Text> */}
 
-      <BulletItem text={text} />
-      <Text style={LIST_TEXT}>status: {status}</Text>
-      {status === "todo" && (
-        <Button onPress={() => changeStatus && changeStatus("done")} text="mark done" />
+      <BulletItem text={item.text} />
+      <Text style={LIST_TEXT}>status: {item.status}</Text>
+      {item.status === "todo" && (
+        <Button
+          onPress={() => {
+            item.changeStatus("done") // clone will change local state only
+            onSaveStatus()
+          }}
+          text="mark done"
+        />
       )}
     </View>
   )
@@ -273,7 +283,6 @@ export const AddEntryText = observer((props) => {
   }
 
   const isSelected = useMemo(
-    // !important check if worth it for performance
     () => (s: string) => s === status ? "selectedItem" : "selectItem",
     [status],
   )
