@@ -15,7 +15,7 @@ const INPUT: TextStyle = {
   color: color.text,
   minHeight: 44,
   fontSize: 18,
-  backgroundColor: color.palette.white,
+  backgroundColor: color.palette.black,
 }
 
 // currently we have no presets, but that changes quickly when you build your app.
@@ -71,6 +71,7 @@ export function TextField(props: TextFieldProps) {
     placeholder,
     labelTx,
     label,
+    defaultValue = "",
     preset = "default",
     style: styleOverride,
     inputStyle: inputStyleOverride,
@@ -89,6 +90,7 @@ export function TextField(props: TextFieldProps) {
         placeholder={actualPlaceholder}
         placeholderTextColor={color.palette.lighterGrey}
         underlineColorAndroid={color.transparent}
+        defaultValue={defaultValue}
         {...rest}
         style={inputStyles}
         ref={forwardedRef}

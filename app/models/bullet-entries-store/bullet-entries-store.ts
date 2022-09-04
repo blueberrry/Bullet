@@ -1,4 +1,4 @@
-import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import { destroy, Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
 import { BulletEntryApi } from "../../services/api/bullet-entry-api"
@@ -51,7 +51,6 @@ export const BulletEntriesStoreModel = types
   }))
   .actions((self) => ({
     addBulletEntry: ({ text = "", status = "todo" }) => {
-      debugger
       const id = uuidv4()
       const newBulletEntry = BulletEntryModel.create({
         id,
@@ -61,7 +60,11 @@ export const BulletEntriesStoreModel = types
       })
       self.bulletEntries.push(newBulletEntry)
     },
-    // TODO: Unused
+
+    removeBulletEntry: (item) => {
+      destroy(item)
+    },
+
     getEntriesFromIds: (ids = []) => {
       // should be in view
       // pass array of guids for specific date

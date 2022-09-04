@@ -49,9 +49,8 @@ export function BulletItem(props: BulletItemProps) {
       <View style={!children ? BULLET_TEXT_CONTAINER : BULLET_TEXT_CONTAINER_WITH_SIBLING}>
         <Icon icon="bullet" containerStyle={BULLET_CONTAINER} style={BULLET} />
         <Text style={BULLET_TEXT} text={text} />
+        {children && <View>{children}</View>}
       </View>
-
-      {children && <View>{children}</View>}
     </View>
   )
 }
