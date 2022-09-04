@@ -34,6 +34,7 @@
     "@react-navigation/native": "~6.0.1",
     "@react-navigation/native-stack": "^6.0.2",
     "@react-navigation/stack": "~6.2.1",
+    "accordion-collapse-react-native": "^1.1.1",
     "add": "^2.0.6",
     "apisauce": "2.1.5",
     "expo": "^46.0.0",

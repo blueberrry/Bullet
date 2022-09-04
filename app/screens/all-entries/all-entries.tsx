@@ -25,6 +25,7 @@ import { applySnapshot, clone, getSnapshot } from "mobx-state-tree"
 import Preview from "@storybook/react-native/dist/preview"
 import { Footer } from "../../components/footer/footer"
 import { GestureModal } from "../../components/gesture-modal/gesture-modal"
+import { Accordian } from "../../components/accordian/accordian"
 import { save } from "../../utils/storage"
 import { EntryForm as EntryForm } from "../../components/entry-form/entry-form"
 import { string } from "mobx-state-tree/dist/internal"
@@ -54,22 +55,12 @@ import { string } from "mobx-state-tree/dist/internal"
 
 // TODO: If order null from pageData, calculate by timestamp.
 
-// Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].entries)
-const getThisDaysIds = (thisDay) => {
-  let dayIdsArray = []
-  dayIdsArray = thisDay.items.map((item) => item.id)
-  return dayIdsArray
-}
+// TODO: Split components
+// TODO: Nested sort priority ranking - if null, sort by timestamp and apply ranking
+// TODO: If new, set new state as highestRank + 1 (day store)
+// TODO: If moved (via drag), swap index (day store)
 
-// Create a new array by filtering ALL_ENTRIES with current days ids
-const getEntriesDromDayIds = (allBulletEntries, thisDaysids) => {
-  const entries = allBulletEntries.filter((entry, index) => {
-    if (thisDaysids.includes(entry.id)) {
-      return entry
-    }
-  })
-  return entries
-}
+// TODO: Nested scroll warning back
 
 // Day specific data such as migrated and order now should be merged to build out the rows with all the data needed for each item
 // types Array<All_ENTRIES with entry migrated and order state>
@@ -113,15 +104,6 @@ const addRankingAfterSort = (entriesOldToNew) => {
   return entriesWithRankings
 }
 
-/**
- *
- * Utilities // TODO: Move out
- *
- **/
-
-// TODO: Create dailystore with expanded vals (see notebook)
-// order  then fall back to timestamp
-
 export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
@@ -129,9 +111,13 @@ export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> 
     const { bulletEntriesStore } = useStores()
     const { bulletEntries } = bulletEntriesStore
 
+    const todos = bulletEntriesStore.allTodos
+    const notes = bulletEntriesStore.allNotes
+    const inspirationalIdeas = bulletEntriesStore.allInspirationalIdeas
+    const done = bulletEntriesStore.allDone
+
     const [entryFormVisible, setEntryFormVisible] = useState(false)
     const [animateEntryForm, setAnimateEntryForm] = useState(false)
-    const [entryText, setEntryText] = useState("")
 
     const saveNewEntry = ({ text, status }) => {
       setEntryFormVisible(false)
@@ -164,9 +150,9 @@ export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> 
       <>
         <View testID="DemoListScreen" style={FULL}>
           <GradientBackground colors={["#422443", "#000000"]} />
-          <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
+          <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
             <Header
-              headerText="Bullet Backlog"
+              headerText="All Entries"
               leftIcon="back"
               onLeftPress={goBack}
               style={HEADER}
@@ -175,33 +161,61 @@ export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> 
             <Text>{`Total entries: ${bulletEntriesStore.totalBulletEntries}`}</Text>
 
             {/* <DraggableBulletList entries={[...bulletEntries]} /> */}
-            <FlatList
-              data={[...bulletEntries]}
-              renderItem={renderBulletEntry}
-              keyExtractor={(item) => item.id}
-            />
-            <Footer>
-              <Button
-                text="Add new bullet entry"
-                preset="secondary"
-                onPress={() => setEntryFormVisible(true)}
+            <Accordian title={`Todos (${todos.length})`}>
+              <FlatList
+                nestedScrollEnabled
+                data={[...todos]}
+                renderItem={renderBulletEntry}
+                keyExtractor={(item) => item.id}
               />
-            </Footer>
-            <GestureModal
-              modalVisible={entryFormVisible}
-              setModalVisible={setEntryFormVisible}
-              animateModal={animateEntryForm}
-              setAnimateModal={setAnimateEntryForm}
-              fillViewport={true}
-              title="Add Entry"
-            >
-              <EntryForm onSaveEntry={saveNewEntry} />
-            </GestureModal>
+            </Accordian>
+            <Accordian title={`Notes (${notes.length})`}>
+              <FlatList
+                nestedScrollEnabled
+                data={[...notes]}
+                renderItem={renderBulletEntry}
+                keyExtractor={(item) => item.id}
+              />
+            </Accordian>
+            <Accordian title={`Inspirational Ideas (${inspirationalIdeas.length})`}>
+              <FlatList
+                data={[...inspirationalIdeas]}
+                renderItem={renderBulletEntry}
+                keyExtractor={(item) => item.id}
+                nestedScrollEnabled
+              />
+            </Accordian>
+            <Accordian title={`Done (${done.length})`}>
+              <FlatList
+                data={[...done]}
+                renderItem={renderBulletEntry}
+                keyExtractor={(item) => item.id}
+                nestedScrollEnabled
+              />
+            </Accordian>
+
             {/* <Button text="Migrate to daily (from flatlist item)" onPress={() => removeBulletEntry()} /> */}
             {/* <Button text="Migrate to weekly (from flatlist item)" onPress={() => removeBulletEntry()} /> */}
             {/* <Button text="Migrate to monthly (from flatlist item)" onPress={() => removeBulletEntry()} /> */}
             {/* <Button text="Edit (from flatlist item)" onPress={() => removeBulletEntry()} /> */}
           </Screen>
+          <Footer>
+            <Button
+              text="Add new bullet entry"
+              preset="secondary"
+              onPress={() => setEntryFormVisible(true)}
+            />
+          </Footer>
+          <GestureModal
+            modalVisible={entryFormVisible}
+            setModalVisible={setEntryFormVisible}
+            animateModal={animateEntryForm}
+            setAnimateModal={setAnimateEntryForm}
+            fillViewport={true}
+            title="Add Entry"
+          >
+            <EntryForm onSaveEntry={saveNewEntry} />
+          </GestureModal>
         </View>
       </>
     )
@@ -212,7 +226,6 @@ export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> 
 export const Entry: FC<{
   item: BulletEntry
 }> = observer((props) => {
-  // const onChangeStatus = () => {}
   const { item } = props
 
   const [editEntryFormVisible, setEditEntryFormVisible] = useState(false)
@@ -221,14 +234,11 @@ export const Entry: FC<{
   const TOGGLABLE_ITEMS = ["todo", "done"]
 
   //   let cloneEntry = clone(item)
-
   const updateEntry = ({ text, status }) => {
     // cloneEntry.changeText(text)
     // cloneEntry.changeStatus(status)
-
     item.changeText(text)
     item.changeStatus(status)
-
     // applySnapshot(item, getSnapshot(cloneEntry))
     // cloneEntry = null
     setEditEntryFormVisible(false)

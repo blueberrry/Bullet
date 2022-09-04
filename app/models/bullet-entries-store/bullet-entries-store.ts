@@ -1,5 +1,6 @@
 import { destroy, Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import "react-native-get-random-values"
+import { SlideInDown } from "react-native-reanimated"
 import { v4 as uuidv4 } from "uuid"
 import { BulletEntryApi } from "../../services/api/bullet-entry-api"
 import { BulletEntry, BulletEntryModel } from "../bullet-entry/bullet-entry"
@@ -21,6 +22,18 @@ export const BulletEntriesStoreModel = types
     // powered behind the scenes, tracks which data is relevant and only calculated when necessary
     get totalBulletEntries() {
       return self.bulletEntries.length
+    },
+    get allTodos() {
+      return self.bulletEntries.filter((entry) => entry.status === "todo")
+    },
+    get allNotes() {
+      return self.bulletEntries.filter((entry) => entry.status === "note")
+    },
+    get allInspirationalIdeas() {
+      return self.bulletEntries.filter((entry) => entry.status === "inspirationalIdeas")
+    },
+    get allDone() {
+      return self.bulletEntries.filter((entry) => entry.status === "done")
     },
   }))
   .actions((self) => ({
