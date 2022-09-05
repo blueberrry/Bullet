@@ -1,5 +1,6 @@
 /**
  *
+ * @deprecated in favour of mocky.io
  * !important - this project currently does not have a backend so we are
  * !important   passing the initial state to the mobX stores from here (instead of doing an api fetch)
  *

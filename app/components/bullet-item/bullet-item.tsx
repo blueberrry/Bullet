@@ -1,6 +1,6 @@
 import * as React from "react"
 import { View, ViewStyle, ImageStyle, TextStyle } from "react-native"
-import { Text } from "../text/text"
+import { AppText } from "../app-text/app-text"
 import { Icon } from "../icon/icon"
 import { spacing, typography } from "../../theme"
 
@@ -40,17 +40,19 @@ const BULLET_TEXT: TextStyle = {
 export interface BulletItemProps {
   text: string
   children?: React.ReactNode
+  childrenInline?: boolean
 }
 
 export function BulletItem(props: BulletItemProps) {
-  const { text, children } = props
+  const { text, children, childrenInline = false } = props
   return (
     <View style={BULLET_ITEM}>
       <View style={!children ? BULLET_TEXT_CONTAINER : BULLET_TEXT_CONTAINER_WITH_SIBLING}>
         <Icon icon="bullet" containerStyle={BULLET_CONTAINER} style={BULLET} />
-        <Text style={BULLET_TEXT} text={text} />
-        {children && <View>{children}</View>}
+        <AppText style={BULLET_TEXT} text={text} />
+        {children && childrenInline && <View>{children}</View>}
       </View>
+      {children && !childrenInline && <View>{children}</View>}
     </View>
   )
 }

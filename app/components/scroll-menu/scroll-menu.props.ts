@@ -23,7 +23,7 @@ export interface ScrollMenuBtnProps {
 export interface ScrollMenuBtnDate {}
 
 export interface ScrollMenuProgressProps {
-  completed?: number
+  done?: number
   total?: number
   style?: StyleProp<TextStyle>
 }

@@ -1,8 +1,9 @@
 import React from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native"
-import { Text } from "../text/text"
+import { AppText } from "../app-text/app-text"
 
+// TODO Style resets/overrides
 interface AccordianProps {
   title: string
   headerStyle?: ViewStyle
@@ -18,7 +19,7 @@ export function Accordian(props: AccordianProps) {
     <Collapse isExpanded={isExpanded}>
       <CollapseHeader>
         <View>
-          <Text>{title}</Text>
+          <AppText>{title}</AppText>
         </View>
       </CollapseHeader>
       <CollapseBody>{children}</CollapseBody>

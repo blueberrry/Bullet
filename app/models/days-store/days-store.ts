@@ -34,13 +34,6 @@ export const DaysStoreModel = types
         __DEV__ && console.tron.log(result.kind)
       }
     },
-    getDaysTest: () => {
-      // Here we are saying that if we have no data/initial data only, we should save our hard coded initial entries for testing
-
-      if (self.days.length < 3) {
-        self.days.replace(INITIAL_ALL_DAYS.results)
-      }
-    },
   }))
   .actions((self) => ({
     addNextDay: (date: YYYYMMDD) => {

@@ -54,15 +54,6 @@ export const BulletEntriesStoreModel = types
     },
   }))
   .actions((self) => ({
-    // TODO: Causes tests to fail
-    getInitialBulletEntriesForTesting: () => {
-      // TODO: Temp starting point in lieue of api request
-      if (self.bulletEntries.length < 3) {
-        self.bulletEntries.replace(INITIAL_ALL_BULLET_ENTRIES.results)
-      }
-    },
-  }))
-  .actions((self) => ({
     addBulletEntry: ({ text = "", status = "todo" }) => {
       const id = uuidv4()
       const newBulletEntry = BulletEntryModel.create({

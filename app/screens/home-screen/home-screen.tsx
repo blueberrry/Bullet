@@ -9,7 +9,7 @@ import {
   BulletItem,
   Button,
   Header,
-  Text,
+  AppText,
   Screen,
   AutoImage as Image,
   GradientBackground,
@@ -63,8 +63,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
     // TODO: Once backend completed we should fetch on mount similar to this
 
     const fetchTempInitialData = () => {
-      daysStore.getDaysTest()
-      bulletEntriesStore.getInitialBulletEntriesForTesting()
+      daysStore.getDays()
+      bulletEntriesStore.getBulletEntries()
     }
 
     const navigateToDay = (id) => {
@@ -147,28 +147,26 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
             style={HEADER}
             titleStyle={HEADER_TITLE}
           />
-          <Text style={TITLE} preset="header" tx="demoScreen.title" />
-          <Text style={TAGLINE} tx="demoScreen.tagLine" />
+          <AppText style={TITLE} preset="header" tx="demoScreen.title" />
+          <AppText style={TAGLINE} tx="demoScreen.tagLine" />
           <BulletItem text="Integrated here, Navigation with State, TypeScript, Storybook, and i18n." />
           <BulletItem
             text={`To run Storybook, press ${platformCommand} or shake the device to show the developer menu, then select "Toggle Storybook"`}
           />
           <BulletItem text="Load up Reactotron! You can inspect your app, view the events, interact, and so much more!" />
+          <BulletItem text="Daily Entries">
+            <ScrollMenu
+              entries={[...days]}
+              allBulletEntries={bulletEntries}
+              navigateToScreen={navigateToDay}
+              addNextDay={addNextDay}
+              addSpecificDay={addSpecificDay}
+              removeDate={removeSpecificDay}
+            />
+            <Button text="Get/reset initial testing state" onPress={fetchTempInitialData} />
+          </BulletItem>
           <View>
-            <BulletItem text="Daily Entries">
-              <ScrollMenu
-                entries={[...days]}
-                allBulletEntries={bulletEntries}
-                navigateToScreen={navigateToDay}
-                addNextDay={addNextDay}
-                addSpecificDay={addSpecificDay}
-                removeDate={removeSpecificDay}
-              />
-              <Button text="Get/reset initial testing state" onPress={fetchTempInitialData} />
-            </BulletItem>
-          </View>
-          <View>
-            <Text>Weeklies</Text>
+            <AppText>Weeklies</AppText>
             {/* <ScrollMenu
               entries={[...weeks]}
               allBulletEntries={bulletEntries}
@@ -181,7 +179,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
           </View>
           <View>
             <Button preset="secondary" tx="demoScreen.reactotron" onPress={demoReactotron} />
-            <Text style={HINT} tx={`demoScreen.${Platform.OS}ReactotronHint` as const} />
+            <AppText style={HINT} tx={`demoScreen.${Platform.OS}ReactotronHint` as const} />
           </View>
           <Button
             preset="secondary"
@@ -205,9 +203,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
           />
           <Image source={logoIgnite} style={IGNITE} />
           <View style={LOVE_WRAPPER}>
-            <Text style={LOVE} text="Made with" />
+            <AppText style={LOVE} text="Made with" />
             <Image source={heart} style={HEART} />
-            <Text style={LOVE} text="by Infinite Red" />
+            <AppText style={LOVE} text="by Infinite Red" />
           </View>
         </Screen>
       </View>

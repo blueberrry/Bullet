@@ -6,7 +6,7 @@ import {
   Button,
   Header,
   Screen,
-  Text,
+  AppText,
   GradientBackground,
   AutoImage as Image,
 } from "../../components"
@@ -94,22 +94,22 @@ export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> 
         <GradientBackground colors={["#422443", "#000000"]} />
         <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
           <Header headerText="BULLET JOURNAL 🔫" style={HEADER} titleStyle={HEADER_TITLE} />
-          <Text style={TITLE_WRAPPER}>
-            <Text style={TITLE} text="Daily notes " />
-            <Text style={ALMOST} text="simplifed" />
-            <Text style={TITLE} text="!" />
-          </Text>
-          <Text style={TITLE} preset="header" tx="welcomeScreen.startBulletJourney" />
+          <AppText style={TITLE_WRAPPER}>
+            <AppText style={TITLE} text="Daily notes " />
+            <AppText style={ALMOST} text="simplifed" />
+            <AppText style={TITLE} text="!" />
+          </AppText>
+          <AppText style={TITLE} preset="header" tx="welcomeScreen.startBulletJourney" />
           <Image source={journalLogo} style={JOURNAL} resizeMode="contain" />
-          <Text style={CONTENT}>
+          <AppText style={CONTENT}>
             What is the point of bullet journaling? Bullet journals are designed to be a visual,
             personalized way to keep track of information, explore creativity, brainstorm ideas, and
             keep track of inspiration.
-          </Text>
-          <Text style={CONTENT}>
+          </AppText>
+          <AppText style={CONTENT}>
             They can be easily personalized for different purposes and goals based on each person's
             needs.
-          </Text>
+          </AppText>
         </Screen>
         <SafeAreaView style={FOOTER}>
           <View style={FOOTER_CONTENT}>

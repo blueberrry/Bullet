@@ -1,6 +1,6 @@
 import * as React from "react"
 import { TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
-import { Text } from "../text/text"
+import { AppText } from "../app-text/app-text"
 import { color, spacing } from "../../theme"
 import { CheckboxProps } from "./checkbox.props"
 
@@ -47,7 +47,7 @@ export function Checkbox(props: CheckboxProps) {
       style={rootStyle}
     >
       <View style={outlineStyle}>{props.value && <View style={fillStyle} />}</View>
-      <Text text={props.text} tx={props.tx} numberOfLines={numberOfLines} style={LABEL} />
+      <AppText text={props.text} tx={props.tx} numberOfLines={numberOfLines} style={LABEL} />
     </TouchableOpacity>
   )
 }

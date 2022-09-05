@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { TouchableOpacity, View } from "react-native"
 import { SafeAreaView, useSafeAreaFrame } from "react-native-safe-area-context"
 import SwipeUpDownModal from "react-native-swipe-modal-up-down"
-import { Text } from "../../components/text/text"
+import { AppText } from "../app-text/app-text"
 import { spacing } from "../../theme"
 import { GestureModalProps } from "./gesture-modal.props"
 
@@ -60,7 +60,7 @@ export const GestureModal = (props: GestureModalProps) => {
               !fillViewport && setModalContentHeight(height - e.nativeEvent.layout.height)
             }}
           >
-            {title && <Text>{title}</Text>}
+            {title && <AppText>{title}</AppText>}
             {children}
           </View>
         }

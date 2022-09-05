@@ -4,14 +4,14 @@ export const useGetEntriesByStatus = (entries) => {
   const todos = entries.filter((entry) => entry.status === "todo")
   const todosTotal = todos.length
 
-  const completed = entries.filter((entry) => entry.status === "completed")
-  const completedTotal = completed.length
+  const done = entries.filter((entry) => entry.status === "done")
+  const doneTotal = done.length
 
-  const allTodosTotal = todosTotal + completedTotal
+  const allTodosTotal = todosTotal + doneTotal
 
-  const percentageTodosCompleted = allTodosTotal > 0 ? (completedTotal / allTodosTotal) * 100 : 0
+  const percentageTodosCompleted = allTodosTotal > 0 ? (doneTotal / allTodosTotal) * 100 : 0
 
-  const notes = entries.filter((entry) => entry.status === "notes")
+  const notes = entries.filter((entry) => entry.status === "note")
   const notesTotal = notes.length
 
   const inspirationalIdeas = entries.filter((entry) => entry.status === "inspirationalIdeas")
@@ -20,8 +20,8 @@ export const useGetEntriesByStatus = (entries) => {
   return {
     todos,
     todosTotal,
-    completed,
-    completedTotal,
+    done,
+    doneTotal,
     allTodosTotal,
     percentageTodosCompleted: Math.round(percentageTodosCompleted),
     notes,

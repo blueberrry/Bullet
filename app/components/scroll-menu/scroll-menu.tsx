@@ -2,7 +2,7 @@ import moment from "moment"
 import React, { useState } from "react"
 import { FlatList, TouchableOpacity, View } from "react-native"
 import { getEntriesForSelectedDateSpan } from "../../utils/configure-entries"
-import { Text } from "../../components/text/text"
+import { AppText } from "../app-text/app-text"
 import { useGetEntriesByMigrated } from "../../hooks/useGetEntriesByMigrated"
 import { useGetEntriesByStatus } from "../../hooks/useGetEntriesByStatus"
 import CircularProgress from "react-native-circular-progress-indicator"
@@ -156,8 +156,9 @@ const ScrollMenuBtn = (props: ScrollMenuBtnProps) => {
   const { entriesNotMigrated, entriesMigratedTotal } =
     useGetEntriesByMigrated(entriesForThisDateSpan)
 
+  // TODO: This should probably be store logic
   const {
-    completedTotal,
+    doneTotal,
     allTodosTotal,
     percentageTodosCompleted,
     notesTotal,
@@ -169,32 +170,32 @@ const ScrollMenuBtn = (props: ScrollMenuBtnProps) => {
       <ScrollMenuBtnDate date={date} />
       <View style={PREVIEW_CONTAINER_STYLE}>
         <View style={PROGRESS_CONTAINER_STYLES}>
-          <ScrollMenuProgress completed={completedTotal} total={allTodosTotal}></ScrollMenuProgress>
+          <ScrollMenuProgress done={doneTotal} total={allTodosTotal}></ScrollMenuProgress>
           {/* <Text preset="secondary">Tasks completed</Text> */}
         </View>
         <View style={PREVIEW_ITEMS_CONTAINER_STYLES}>
           <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
             <View style={PREVIEW_ITEM_STYLES}>
               <AntDesign name="checksquareo" size={22} color="black" />
-              <Text>{`${percentageTodosCompleted}%`}</Text>
+              <AppText>{`${percentageTodosCompleted}%`}</AppText>
             </View>
           </View>
           <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
             <View style={PREVIEW_ITEM_STYLES}>
               <MaterialCommunityIcons name="content-save-move" size={24} color="black" />
-              <Text>{entriesMigratedTotal}</Text>
+              <AppText>{entriesMigratedTotal}</AppText>
             </View>
           </View>
           <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
             <View style={PREVIEW_ITEM_STYLES}>
               <FontAwesome5 name="sticky-note" size={24} color="black" />
-              <Text>{notesTotal}</Text>
+              <AppText>{notesTotal}</AppText>
             </View>
           </View>
           <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
             <View style={PREVIEW_ITEM_STYLES}>
               <FontAwesome5 name="lightbulb" size={24} color="black" />
-              <Text>{inspirationalIdeasTotal}</Text>
+              <AppText>{inspirationalIdeasTotal}</AppText>
             </View>
           </View>
         </View>
@@ -214,8 +215,8 @@ const ScrollMenuBtnDate = ({ date }) => {
   const dateText = moment(date).format("Do MMMM YYYY")
   return (
     <View>
-      <Text preset="header">{day}</Text>
-      <Text>{dateText}</Text>
+      <AppText preset="header">{day}</AppText>
+      <AppText>{dateText}</AppText>
     </View>
   )
 }
@@ -227,17 +228,17 @@ const ScrollMenuBtnDate = ({ date }) => {
  **/
 
 const ScrollMenuProgress = (props: ScrollMenuProgressProps) => {
-  const { completed = 1, total = 1, style: styleOverride } = props
+  const { done = 1, total = 1, style: styleOverride } = props
   const textStyle = { ...SCROLL_MENU_PROGRESS_STYLES, styleOverride }
 
   return (
     <CircularProgress
-      value={completed}
+      value={done}
       radius={50}
       duration={2000}
       progressValueColor={"#ecf0f1"}
       maxValue={total}
-      title={`${completed}/${total} ✅`}
+      title={`${done}/${total} ✅`}
       showProgressValue={false}
       titleColor={"white"}
       titleStyle={textStyle}

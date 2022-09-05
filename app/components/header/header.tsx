@@ -2,7 +2,7 @@ import React from "react"
 import { View, ViewStyle, TextStyle } from "react-native"
 import { HeaderProps } from "./header.props"
 import { Button } from "../button/button"
-import { Text } from "../text/text"
+import { AppText } from "../app-text/app-text"
 import { Icon } from "../icon/icon"
 import { spacing } from "../../theme"
 import { translate } from "../../i18n/"
@@ -47,7 +47,7 @@ export function Header(props: HeaderProps) {
         <View style={LEFT} />
       )}
       <View style={TITLE_MIDDLE}>
-        <Text style={[TITLE, titleStyle]} text={header} />
+        <AppText style={[TITLE, titleStyle]} text={header} />
       </View>
       {rightIcon ? (
         <Button preset="link" onPress={onRightPress}>

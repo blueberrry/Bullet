@@ -4,7 +4,7 @@
 import React from "react"
 import { storiesOf } from "@storybook/react-native"
 import { StoryScreen, Story, UseCase } from "../../../storybook/views"
-import { Text, TextField } from "../"
+import { AppText, TextField } from "../"
 import { ViewStyle, TextStyle, Alert } from "react-native"
 import { State } from "../../utils/react-powerplug"
 
@@ -106,7 +106,7 @@ storiesOf("TextField", module)
             />
           )}
         </State>
-        <Text text="* attention designers:  i am so sorry" preset="secondary" />
+        <AppText text="* attention designers:  i am so sorry" preset="secondary" />
       </UseCase>
 
       <UseCase text="Style array" usage="Useful for 1-off exceptions, but using style arrays.">
@@ -121,7 +121,7 @@ storiesOf("TextField", module)
             />
           )}
         </State>
-        <Text text="* attention designers:  i am so sorry" preset="secondary" />
+        <AppText text="* attention designers:  i am so sorry" preset="secondary" />
       </UseCase>
     </Story>
   ))
@@ -153,7 +153,7 @@ storiesOf("TextField", module)
             />
           )}
         </State>
-        <Text text="* attention designers:  i am so sorry" preset="secondary" />
+        <AppText text="* attention designers:  i am so sorry" preset="secondary" />
       </UseCase>
     </Story>
   ))

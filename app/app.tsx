@@ -45,6 +45,7 @@ function App() {
       await initFonts() // expo
       setupRootStore().then(setRootStore)
     })()
+    // TODO: Wire up reactotron clear state button
     // AsyncStorage.clear()
   }, [])
 

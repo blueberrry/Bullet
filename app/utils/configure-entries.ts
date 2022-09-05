@@ -2,7 +2,6 @@
 
 // Unsure which store to put this action in
 export const getEntriesForSelectedDateSpan = (allBulletEntries, entriesForThisDate) => {
-  debugger
   if (allBulletEntries.length > 0 && entriesForThisDate.length > 0) {
     return entriesForThisDate.map((entryForThisDate) => {
       const matchedEntry = allBulletEntries.find((entry) => entry.id === entryForThisDate.id)
@@ -67,6 +66,13 @@ export const sortEntriesByOldest = (entries) => {
   return entries.sort(function (a, b) {
     return a.dateCreated - b.dateCreated
   })
+}
+
+const sortEntriesByPriorityRanking = (entries) => {
+  return entries.sort(function (a, b) {
+    return a.priorityRanking - b.priorityRanking
+  })
+  // currently don't have this part of state because we are only working with bullet entries store
 }
 
 // only needed if dayPriority is null

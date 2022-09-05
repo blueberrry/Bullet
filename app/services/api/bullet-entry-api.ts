@@ -18,7 +18,7 @@ export class BulletEntryApi {
     try {
       // make the api call
       const response: ApiResponse<any> = await this.api.apisauce.get(
-        "https://run.mocky.io/v3/a9104caf-9bf3-4796-a3a7-59ea93aaf0c0",
+        "https://run.mocky.io/v3/04fc2d79-a7b1-42dd-988e-00a6d187358e",
         { amount: API_PAGE_SIZE },
       )
 

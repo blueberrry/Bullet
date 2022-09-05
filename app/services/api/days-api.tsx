@@ -16,7 +16,7 @@ export class DaysApi {
     try {
       // make the api call
       const response: ApiResponse<any> = await this.api.apisauce.get(
-        "https://run.mocky.io/v3/f930147e-4214-4df7-af43-d073b31dd78e",
+        "https://run.mocky.io/v3/f4672ef7-273c-4698-a1a5-bb22f5670e4d",
         { amount: API_PAGE_SIZE },
       )
 

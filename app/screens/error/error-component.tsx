@@ -1,7 +1,7 @@
 import React, { ErrorInfo } from "react"
 import { TextStyle, View, ViewStyle, ScrollView, ImageStyle } from "react-native"
 import { color } from "../../theme"
-import { Button, Icon, Text } from "../../components"
+import { Button, Icon, AppText } from "../../components"
 
 const CONTAINER: ViewStyle = {
   alignItems: "center",
@@ -70,11 +70,11 @@ export const ErrorComponent = (props: ErrorComponentProps) => {
   return (
     <View style={CONTAINER}>
       <Icon style={ICON} icon="bug" />
-      <Text style={TITLE_ERROR} tx={"errorScreen.title"} />
-      <Text style={FRIENDLY_SUBTITLE} tx={"errorScreen.friendlySubtitle"} />
+      <AppText style={TITLE_ERROR} tx={"errorScreen.title"} />
+      <AppText style={FRIENDLY_SUBTITLE} tx={"errorScreen.friendlySubtitle"} />
       <View style={ERROR_DETAILS_CONTAINER}>
         <ScrollView>
-          <Text selectable style={CONTENT_ERROR} text={`${props.error}`} />
+          <AppText selectable style={CONTENT_ERROR} text={`${props.error}`} />
           {/* <Text selectable style={CONTENT_BACKTRACE} text={`${props.errorInfo.componentStack}`} /> */}
         </ScrollView>
       </View>

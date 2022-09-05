@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Text as ReactNativeText } from "react-native"
-import { presets } from "./text.presets"
-import { TextProps } from "./text.props"
+import { presets } from "./app-text.presets"
+import { AppTextProps } from "./app-text.props"
 import { translate } from "../../i18n"
 
 /**
@@ -9,7 +9,7 @@ import { translate } from "../../i18n"
  *
  * This component is a HOC over the built-in React Native one.
  */
-export function Text(props: TextProps) {
+export function AppText(props: AppTextProps) {
   // grab the props
   const { preset = "default", tx, txOptions, text, children, style: styleOverride, ...rest } = props
 

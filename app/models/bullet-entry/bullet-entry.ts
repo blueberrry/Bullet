@@ -10,7 +10,7 @@ export const BulletEntryModel = types
   .model("BulletEntry")
   .props({
     id: types.identifier,
-    status: types.string, // types.maybe(type) makes a type optional and nullable, types.string should be todo|completed|note|inspirationalIdeas|deleted
+    status: types.string, // types.maybe(type) makes a type optional and nullable, types.string should be todo|done|note|inspirationalIdeas|deleted
     text: types.optional(types.string, ""),
     dateCreated: types.optional(types.number, Date.now()), // Is this the correct type for timestamp?
   })
