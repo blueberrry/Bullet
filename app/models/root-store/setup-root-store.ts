@@ -33,6 +33,13 @@ export async function setupRootStore() {
   try {
     // load data from storage
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
+
+    if (RootStoreModel.is(data)) {
+      // if data models change a lot/models have a new attribute that is not present in the snapshot, it will cause an exception
+      // check if this data/json is valid for our wishlist see egg.head.io/react-store-store-in-local-storage
+      console.tron.log("Root store model matches data")
+    }
+
     rootStore = RootStoreModel.create(data, env)
   } catch (e) {
     // if there's any problems loading, then let's at least fallback to an empty state

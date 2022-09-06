@@ -1,11 +1,10 @@
 import { destroy, Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import { identifier } from "mobx-state-tree/dist/internal"
 import "react-native-get-random-values"
-import { SlideInDown } from "react-native-reanimated"
 import { v4 as uuidv4 } from "uuid"
 import { BulletEntryApi } from "../../services/api/bullet-entry-api"
 import { BulletEntry, BulletEntryModel } from "../bullet-entry/bullet-entry"
 import { withEnvironment } from "../extensions/with-environment"
-import { INITIAL_ALL_BULLET_ENTRIES } from "../initial-data/initial-data"
 // import { INITIAL_ALL_BULLET_ENTRIES } from "../initial-data/initial-data"
 
 /**
@@ -36,6 +35,11 @@ export const BulletEntriesStoreModel = types
       return self.bulletEntries.filter((entry) => entry.status === "done")
     },
   }))
+  .views((self) => ({
+    entryById(id) {
+      return self.bulletEntries.find((entry) => entry.id === id)
+    },
+  }))
   .actions((self) => ({
     saveBulletEntries: (bulletEntriesSnapshot: BulletEntry[]) => {
       self.bulletEntries.replace(bulletEntriesSnapshot)
@@ -54,10 +58,11 @@ export const BulletEntriesStoreModel = types
     },
   }))
   .actions((self) => ({
-    addBulletEntry: ({ text = "", status = "todo" }) => {
-      const id = uuidv4()
+    addBulletEntry: ({ id = "", text = "", status = "todo" }) => {
+      // If no id passed (all entries screen), create new uid, else use id passed from day/month view
+      const newId = id === "" ? uuidv4() : id
       const newBulletEntry = BulletEntryModel.create({
-        id,
+        id: newId,
         text,
         status,
         dateCreated: Date.now(),
@@ -67,6 +72,7 @@ export const BulletEntriesStoreModel = types
 
     removeBulletEntry: (item) => {
       destroy(item)
+      // same as self.bulletEntries.splice(self.bulletEntries.indexOf(item), 1)
     },
 
     getEntriesFromIds: (ids = []) => {

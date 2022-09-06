@@ -1,18 +1,21 @@
 // TODO: Most of these need to be move to actions in their respective stores - see about merging data
 
 // Unsure which store to put this action in
-export const getEntriesForSelectedDateSpan = (allBulletEntries, entriesForThisDate) => {
+export const getEntriesForSelectedDateSpan = (entriesForThisDate, allBulletEntries) => {
+  let dateEntriesWithDetails = []
+
   if (allBulletEntries.length > 0 && entriesForThisDate.length > 0) {
-    return entriesForThisDate.map((entryForThisDate) => {
+    entriesForThisDate.forEach((entryForThisDate) => {
       const matchedEntry = allBulletEntries.find((entry) => entry.id === entryForThisDate.id)
+
       if (matchedEntry) {
-        return { ...matchedEntry, ...entryForThisDate }
+        const mergedEntry = { ...matchedEntry, ...entryForThisDate }
+        dateEntriesWithDetails = [...dateEntriesWithDetails, mergedEntry]
       }
-      return entryForThisDate
     })
   }
-  console.tron.warn("no bullet entries or no daily/weekly/monthly entries")
-  return []
+  // console.tron.warn("no bullet entries or no daily/weekly/monthly entries")
+  return dateEntriesWithDetails
 }
 
 // Get days entry ids in all-days-store
@@ -21,17 +24,6 @@ export const getThisDaysids = (thisDay) => {
   let dayIdsArray = []
   dayIdsArray = thisDay.items.map((item) => item.id)
   return dayIdsArray
-}
-
-// Create a new array by filtering ALL_ENTRIES with current days ids
-export const getEntriesDromDayIds = (allBulletEntries, thisDaysids) => {
-  const entries = allBulletEntries.filter((entry, index) => {
-    if (thisDaysids.includes(entry.id)) {
-      return entry
-    }
-  })
-
-  return entries
 }
 
 // Day specific data such as migrated and order now should be merged to build out the rows with all the data needed for each item

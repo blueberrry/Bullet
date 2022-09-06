@@ -26,6 +26,9 @@ import { Button } from "../button/button"
 import { convertDateToYYYYMMDD } from "../../utils/date-formatting"
 import { DayPicker } from "../day-picker-calendar/day-picker-calendar"
 import { GestureModal } from "../gesture-modal/gesture-modal"
+import { useStores } from "../../models"
+import { useEntriesForDate } from "../../hooks/use-entries-for-date"
+import { observer } from "mobx-react-lite"
 
 /**
  *
@@ -42,9 +45,10 @@ import { GestureModal } from "../gesture-modal/gesture-modal"
 // TODO: Move other components out
 // TODO: Reusability - how much of this is reusable for weeklies/monthlies?
 
-export const ScrollMenu = (props: ScrollMenuProps) => {
-  const { entries, allBulletEntries, navigateToScreen, addNextDay, addSpecificDay, removeDate } =
-    props
+export const ScrollMenu = observer((props: ScrollMenuProps) => {
+  const { entries, datesArray, navigateToScreen, addNextDay, addSpecificDay, removeDate } = props
+
+  // TODO: Pass merged (Bullet entries + entry details) from parent
 
   const [dateMenuVisible, setDateMenuVisible] = useState(false)
   const [animateDateMenu, setAnimateDateMenu] = useState(false)
@@ -52,12 +56,10 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
   const [datePickerVisble, setDatePickerVisible] = useState(false)
   const [animateDatePicker, setAnimateDatePicker] = useState(false)
 
-  const datesOnly = entries.map((entry) => entry.date)
-
   const renderItem = ({ item }) => {
     return (
       <View style={RELATIVE_WRAPPER_STYLE}>
-        <Button text="delete" style={DELETE_BTN_STYLES} onPress={() => removeDate(item.date)} />
+        <Button text="delete" style={DELETE_BTN_STYLES} onPress={() => removeDate(item)} />
         <ScrollMenuBtn
           onMenuBtnPress={() => {
             navigateToScreen(item.id)
@@ -65,7 +67,6 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
           id={item.id}
           date={item.date}
           entries={item.entriesDetails}
-          allEntries={allBulletEntries}
         />
       </View>
     )
@@ -80,7 +81,6 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
         horizontal={true}
         style={HORIZONTAL_SCROLL_MENU_STYLES}
         contentContainerStyle={{}}
-        extraData={allBulletEntries}
         ListFooterComponent={
           <View style={SCROLL_MENU_ADD_BTN_CONTAINER_STYLES}>
             {/* <Button text="+" onPress={addDate} /> */}
@@ -123,7 +123,7 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
         title="Add Date"
       >
         <DayPicker
-          dates={datesOnly}
+          dates={datesArray}
           handleDayPress={(dayObj) => {
             const formattedDay = convertDateToYYYYMMDD(dayObj.dateString)
             addSpecificDay(formattedDay)
@@ -134,7 +134,7 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
       </GestureModal>
     </>
   )
-}
+})
 
 /**
  *
@@ -142,28 +142,36 @@ export const ScrollMenu = (props: ScrollMenuProps) => {
  *
  **/
 
-const ScrollMenuBtn = (props: ScrollMenuBtnProps) => {
-  const { date, entries, allEntries, onMenuBtnPress } = props
+const ScrollMenuBtn = observer((props: ScrollMenuBtnProps) => {
+  const { date, entries, onMenuBtnPress } = props
 
-  // get migrated entries/not migrated from days entries
-  // get days entries ids as array
-  // get entriesData from allEntries
+  const { bulletEntriesStore } = useStores()
+  const { bulletEntries } = bulletEntriesStore
 
-  // merge entriesData with day entries details
+  // TODO: Hoist? logic to (grand)parent component, component only needs ID for day screen and relevant data
 
-  const entriesForThisDateSpan = getEntriesForSelectedDateSpan(allEntries, entries) // TODO: usememo
+  // const entriesForThisDateSpan = getEntriesForSelectedDateSpan(bulletEntries, entries) // TODO: usememo
 
-  const { entriesNotMigrated, entriesMigratedTotal } =
-    useGetEntriesByMigrated(entriesForThisDateSpan)
+  // const { entriesNotMigrated, entriesMigratedTotal } =
+  //   useGetEntriesByMigrated(entriesForThisDateSpan)
 
-  // TODO: This should probably be store logic
+  // // TODO: This should probably be store logic
+  // const {
+  //   doneTotal,
+  //   allTodosTotal,
+  //   percentageTodosCompleted,
+  //   notesTotal,
+  //   inspirationalIdeasTotal,
+  // } = useGetEntriesByStatus(entriesNotMigrated)
+
   const {
+    entriesMigratedTotal,
     doneTotal,
     allTodosTotal,
     percentageTodosCompleted,
     notesTotal,
     inspirationalIdeasTotal,
-  } = useGetEntriesByStatus(entriesNotMigrated)
+  } = useEntriesForDate(entries, bulletEntries)
 
   return (
     <TouchableOpacity onPress={onMenuBtnPress} style={SCROLL_MENU_BTN_STYLES}>
@@ -202,7 +210,7 @@ const ScrollMenuBtn = (props: ScrollMenuBtnProps) => {
       </View>
     </TouchableOpacity>
   )
-}
+})
 
 /**
  *

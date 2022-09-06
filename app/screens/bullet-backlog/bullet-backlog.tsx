@@ -3,7 +3,7 @@ import { FlatList, TextStyle, View, ViewStyle, ImageStyle, TouchableOpacity } fr
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 
-// !important - this isn't functioning as a backlog, this is an `all items` page 
+// !important - this isn't functioning as a backlog, this is an `all items` page
 
 import {
   Header,
@@ -34,93 +34,6 @@ import DraggableBulletList from "../../components/draggable-bullet-list/draggabl
  * *        - On weekly/monthly - no, unless server doesn't serve ranking data
  *
  **/
-
-const ALL_DAYS_INITIAL_IDS = [
-  "5b122234-4931-4037-8347-f662739ba01b",
-  "aad640ce-76de-4a3a-86dc-6cf45750fe0c",
-  "5ac99dc5-ee8f-414c-ae40-afb9580cdb5b",
-  "011cda35-73ca-487c-9460-f4e7f6afd36c",
-]
-
-const ALL_DAYS_INITIAL_DATA = [
-  {
-    id: ALL_DAYS_INITIAL_IDS[0], // TODO: Or Date.now()/day()
-    date: "day",
-    entriesDetails: [
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-    ],
-  },
-  {
-    id: ALL_DAYS_INITIAL_IDS[1],
-    date: "day",
-    entriesDetails: [
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-    ],
-  },
-  {
-    id: ALL_DAYS_INITIAL_IDS[2],
-    date: "day",
-    entriesDetails: [
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-    ],
-  },
-  {
-    id: ALL_DAYS_INITIAL_IDS[3],
-    date: "day",
-    entriesDetails: [
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-      { id: "", priorityRanking: null, migrated: false },
-    ],
-  },
-]
-
-const DAILY_ENTRIES_INITIAL_DATA = ALL_DAYS_INITIAL_DATA[0].entriesDetails
-
-const TEMP_DAY_ID = "ac5f2861-4a9e-42ce-b4f5-c06f21b84dfd"
-
-// TODO: Change ID to Id
-
-// Get the current day's entry IDs as an array (ALL_DAYS_INITIAL_DATA[0].entries)
-const getThisDaysids = (thisDay) => {
-  let dayIdsArray = []
-  dayIdsArray = thisDay.items.map((item) => item.id)
-  return dayIdsArray
-}
-
-// Create a new array by filtering ALL_ENTRIES with current days ids
-const getEntriesDromDayIds = (allBulletEntries, thisDaysids) => {
-  const entries = allBulletEntries.filter((entry, index) => {
-    if (thisDaysids.includes(entry.id)) {
-      return entry
-    }
-  })
-
-  return entries
-}
-
-// Day specific data such as migrated and order now should be merged to build out the rows with all the data needed for each item
-// types Array<All_ENTRIES with entry migrated and order state>
-const mergeBulletEntriesDataWithDailyData = (bulletEntriesForThisDay, thisDaysSpecificData) => {
-  let newData = []
-
-  if (bulletEntriesForThisDay > 0 && thisDaysSpecificData > 0) {
-    newData = bulletEntriesForThisDay.map((entry) => {
-      const { migrated, order } = thisDaysSpecificData.find(
-        (daySpecificEntry) => daySpecificEntry.id === entry.ID,
-      )
-      return { ...entry, migrated, order }
-    })
-    return newData
-  }
-}
 
 // if this items priorityRanking is null then something has gone wrong 🤯, it shouldn't because each item should only update
 // on user action (adding/removing/editing)
@@ -168,34 +81,6 @@ export const BulletBacklog: FC<StackScreenProps<NavigatorParamList, "bulletBackl
     const [x, setX] = useState(null)
 
     const [localentries, setLocalentries] = useState(null) // TODO: Move to daily store
-
-    useEffect(() => {
-      console.tron.log("got bullet entries", JSON.stringify(bulletEntries, null, 2))
-    }, [bulletEntries])
-
-    //       Surely the day component should only be passed the _days_ data as props and allEntries data
-    //       We will getch initial day data here for now
-
-    // useEffect(() => {
-    //   function fetchTempInitialData() {
-    //     bulletEntriesStore.getInitialBulletEntriesForTesting()
-    //   }
-
-    //   fetchTempInitialData()
-    // }, [])
-
-    const addBulletEntry = (newEntry = undefined) => {
-      const newBulletEntries = [
-        ...bulletEntries,
-        {
-          id: "52669457-0ee4-4094-bc41-5d63349619a8",
-          status: "todo",
-          text: "Newest entry",
-          dateCreated: Date.now(),
-        },
-      ]
-      bulletEntriesStore.saveBulletEntries(newBulletEntries)
-    }
 
     const removeBulletEntry = (id = "52669457-0ee4-4094-bc41-5d63349619a8") => {
       const newBulletEntries = bulletEntries.filter((entry) => id !== entry.id)

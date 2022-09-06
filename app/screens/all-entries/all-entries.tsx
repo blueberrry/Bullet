@@ -90,7 +90,7 @@ export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> 
 
     return (
       <>
-        <View testID="DemoListScreen" style={FULL}>
+        <View testID="AllEntriesScreen" style={FULL}>
           <GradientBackground colors={["#422443", "#000000"]} />
           <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
             <Header

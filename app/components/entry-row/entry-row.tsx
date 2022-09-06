@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useState } from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
+import { useStores } from "../../models"
 import { BulletEntry } from "../../models/bullet-entry/bullet-entry"
 import { AppText } from "../app-text/app-text"
 import { BulletItem } from "../bullet-item/bullet-item"
@@ -14,6 +15,7 @@ import { DummySwipeBtnRow } from "../_temp/dummy-swipe-row/dummy-swiper-row"
 // TODO: types check
 export const EntryRow: FC<{
   item: BulletEntry
+  
 }> = observer((props) => {
   const { item } = props
 

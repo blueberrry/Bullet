@@ -10,7 +10,13 @@ export const BulletEntryModel = types
   .model("BulletEntry")
   .props({
     id: types.identifier,
-    status: types.string, // types.maybe(type) makes a type optional and nullable, types.string should be todo|done|note|inspirationalIdeas|deleted
+    // status: types.union(
+    //   types.literal("todo"),
+    //   types.literal("done"),
+    //   types.literal("note"),
+    //   types.literal("inspirationalIdeas"),
+    // ),
+    status: types.enumeration("status", ["todo", "done", "note", "inspirationalIdeas"]),
     text: types.optional(types.string, ""),
     dateCreated: types.optional(types.number, Date.now()), // Is this the correct type for timestamp?
   })
@@ -25,8 +31,7 @@ export const BulletEntryModel = types
       self.text = newText
     },
     remove: () => {
-      const parent = getParent(self, 2)
-      console.tron.log("🚀 ~ file: bullet-entry.ts ~ line 30 ~ .actions ~ parent", parent)
+      // TODO: Add to test
       // delegate to owner of wishlist item since we are changing the collection itself
       if (hasParent(self)) {
         // @ts-ignore
