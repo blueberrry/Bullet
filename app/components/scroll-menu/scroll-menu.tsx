@@ -26,8 +26,6 @@ import { Button } from "../button/button"
 import { convertDateToYYYYMMDD } from "../../utils/date-formatting"
 import { DayPicker } from "../day-picker-calendar/day-picker-calendar"
 import { GestureModal } from "../gesture-modal/gesture-modal"
-import { useStores } from "../../models"
-import { useEntriesForDate } from "../../hooks/use-entries-for-date"
 import { observer } from "mobx-react-lite"
 
 /**
@@ -41,12 +39,12 @@ import { observer } from "mobx-react-lite"
 // TODO: Sort list by date order
 // TODO: Ensure data can have no dupes
 // TODO: On day picker select we need to close the modal
-// TODO: Add specific day not showing when no days
 // TODO: Move other components out
 // TODO: Reusability - how much of this is reusable for weeklies/monthlies?
+// TODO: On press open edit mode modal
 
 export const ScrollMenu = observer((props: ScrollMenuProps) => {
-  const { entries, datesArray, navigateToScreen, addNextDay, addSpecificDay, removeDate } = props
+  const { days, datesArray, navigateToScreen, addNextDay, addSpecificDay, removeDate } = props
 
   // TODO: Pass merged (Bullet entries + entry details) from parent
 
@@ -56,7 +54,11 @@ export const ScrollMenu = observer((props: ScrollMenuProps) => {
   const [datePickerVisble, setDatePickerVisible] = useState(false)
   const [animateDatePicker, setAnimateDatePicker] = useState(false)
 
+  // TODO: See if can move percentage to view/extension/memoize
   const renderItem = ({ item }) => {
+    const totalTodosAndDone = item.totalTodos + item.totalDone
+    const percentageDone = totalTodosAndDone > 0 ? (item.totalDone / totalTodosAndDone) * 100 : 0
+
     return (
       <View style={RELATIVE_WRAPPER_STYLE}>
         <Button text="delete" style={DELETE_BTN_STYLES} onPress={() => removeDate(item)} />
@@ -66,7 +68,12 @@ export const ScrollMenu = observer((props: ScrollMenuProps) => {
           }}
           id={item.id}
           date={item.date}
-          entries={item.entriesDetails}
+          totalTodosAndDone={totalTodosAndDone}
+          totalDone={item.totalDone}
+          percentageDone={Math.round(percentageDone)}
+          totalMigrated={item.totalMigrated}
+          totalNotes={item.totalNotes}
+          totalInspirationalIdeas={item.totalInspirationalIdeas}
         />
       </View>
     )
@@ -75,7 +82,7 @@ export const ScrollMenu = observer((props: ScrollMenuProps) => {
   return (
     <>
       <FlatList
-        data={[...entries]}
+        data={[...days]}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         horizontal={true}
@@ -83,7 +90,6 @@ export const ScrollMenu = observer((props: ScrollMenuProps) => {
         contentContainerStyle={{}}
         ListFooterComponent={
           <View style={SCROLL_MENU_ADD_BTN_CONTAINER_STYLES}>
-            {/* <Button text="+" onPress={addDate} /> */}
             <Button text="+" onPress={() => setDateMenuVisible(true)} />
           </View>
         }
@@ -143,67 +149,47 @@ export const ScrollMenu = observer((props: ScrollMenuProps) => {
  **/
 
 const ScrollMenuBtn = observer((props: ScrollMenuBtnProps) => {
-  const { date, entries, onMenuBtnPress } = props
-
-  const { bulletEntriesStore } = useStores()
-  const { bulletEntries } = bulletEntriesStore
-
-  // TODO: Hoist? logic to (grand)parent component, component only needs ID for day screen and relevant data
-
-  // const entriesForThisDateSpan = getEntriesForSelectedDateSpan(bulletEntries, entries) // TODO: usememo
-
-  // const { entriesNotMigrated, entriesMigratedTotal } =
-  //   useGetEntriesByMigrated(entriesForThisDateSpan)
-
-  // // TODO: This should probably be store logic
-  // const {
-  //   doneTotal,
-  //   allTodosTotal,
-  //   percentageTodosCompleted,
-  //   notesTotal,
-  //   inspirationalIdeasTotal,
-  // } = useGetEntriesByStatus(entriesNotMigrated)
-
   const {
-    entriesMigratedTotal,
-    doneTotal,
-    allTodosTotal,
-    percentageTodosCompleted,
-    notesTotal,
-    inspirationalIdeasTotal,
-  } = useEntriesForDate(entries, bulletEntries)
+    date,
+    onMenuBtnPress,
+    totalTodosAndDone,
+    totalDone,
+    percentageDone,
+    totalMigrated,
+    totalNotes,
+    totalInspirationalIdeas,
+  } = props
 
   return (
     <TouchableOpacity onPress={onMenuBtnPress} style={SCROLL_MENU_BTN_STYLES}>
       <ScrollMenuBtnDate date={date} />
       <View style={PREVIEW_CONTAINER_STYLE}>
         <View style={PROGRESS_CONTAINER_STYLES}>
-          <ScrollMenuProgress done={doneTotal} total={allTodosTotal}></ScrollMenuProgress>
-          {/* <Text preset="secondary">Tasks completed</Text> */}
+          <ScrollMenuProgress done={totalDone} total={totalTodosAndDone}></ScrollMenuProgress>
         </View>
         <View style={PREVIEW_ITEMS_CONTAINER_STYLES}>
           <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
             <View style={PREVIEW_ITEM_STYLES}>
               <AntDesign name="checksquareo" size={22} color="black" />
-              <AppText>{`${percentageTodosCompleted}%`}</AppText>
+              <AppText>{`${percentageDone}%`}</AppText>
             </View>
           </View>
           <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
             <View style={PREVIEW_ITEM_STYLES}>
               <MaterialCommunityIcons name="content-save-move" size={24} color="black" />
-              <AppText>{entriesMigratedTotal}</AppText>
+              <AppText>{totalMigrated}</AppText>
             </View>
           </View>
           <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
             <View style={PREVIEW_ITEM_STYLES}>
               <FontAwesome5 name="sticky-note" size={24} color="black" />
-              <AppText>{notesTotal}</AppText>
+              <AppText>{totalNotes}</AppText>
             </View>
           </View>
           <View style={PREVIEW_ITEM_CONTAINER_STYLES}>
             <View style={PREVIEW_ITEM_STYLES}>
               <FontAwesome5 name="lightbulb" size={24} color="black" />
-              <AppText>{inspirationalIdeasTotal}</AppText>
+              <AppText>{totalInspirationalIdeas}</AppText>
             </View>
           </View>
         </View>
@@ -218,7 +204,7 @@ const ScrollMenuBtn = observer((props: ScrollMenuBtnProps) => {
  *
  **/
 
-const ScrollMenuBtnDate = ({ date }) => {
+const ScrollMenuBtnDate = observer(({ date }) => {
   const day = moment(date).format("dddd")
   const dateText = moment(date).format("Do MMMM YYYY")
   return (
@@ -227,7 +213,7 @@ const ScrollMenuBtnDate = ({ date }) => {
       <AppText>{dateText}</AppText>
     </View>
   )
-}
+})
 
 /**
  *
@@ -235,7 +221,7 @@ const ScrollMenuBtnDate = ({ date }) => {
  *
  **/
 
-const ScrollMenuProgress = (props: ScrollMenuProgressProps) => {
+const ScrollMenuProgress = observer((props: ScrollMenuProgressProps) => {
   const { done = 1, total = 1, style: styleOverride } = props
   const textStyle = { ...SCROLL_MENU_PROGRESS_STYLES, styleOverride }
 
@@ -252,4 +238,4 @@ const ScrollMenuProgress = (props: ScrollMenuProgressProps) => {
       titleStyle={textStyle}
     />
   )
-}
+})

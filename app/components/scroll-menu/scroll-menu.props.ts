@@ -1,11 +1,14 @@
 import { StyleProp, TextStyle } from "react-native"
-import { Day, DaySnapshotIn } from "../../models/day/day"
+import { Day, DaySnapshotIn, DaySnapshotOut } from "../../models/day/day"
 import { BulletEntryStoreSnapshotIn } from "../../models/bullet-entries-store/bullet-entries-store"
-import { EntryDetailsSnapshotOut } from "../../models/entry-details-for-datespan/entry-details-for-datespan"
+import {
+  EntryDetails,
+  EntryDetailsSnapshotOut,
+} from "../../models/entry-details-for-datespan/entry-details-for-datespan"
 import { YYYYMMDD } from "../../types/types"
 
 export interface ScrollMenuProps {
-  entries: DaySnapshotIn[] // || Week || Month?
+  days: DaySnapshotOut[] // || Week || Month?
   datesArray: Array<YYYYMMDD> | string[] // TODO: Array<YYYYMMDD> Should work without string[]?
   navigateToScreen: (id: string) => void
   addNextDay: () => void
@@ -14,11 +17,15 @@ export interface ScrollMenuProps {
 }
 
 export interface ScrollMenuBtnProps {
+  onMenuBtnPress: () => void
   id: Day["id"]
   date: Day["date"]
-  entries: EntryDetailsSnapshotOut[] // entries[] & BulletEntriesStore[] //TODO: This
-  allEntries?: any[] // TODO
-  onMenuBtnPress: () => void
+  totalTodosAndDone: number
+  totalDone: number
+  percentageDone: number
+  totalMigrated: number
+  totalNotes: number
+  totalInspirationalIdeas: number
 }
 
 export interface ScrollMenuBtnDate {}

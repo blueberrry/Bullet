@@ -11,6 +11,7 @@ export const RootStoreModel = types.model("RootStore").props({
   bulletEntriesStore: types.optional(BulletEntriesStoreModel, {} as any),
   daysStore: types.optional(DaysStoreModel, {} as any)
 })
+// TODO: Fetch initial data + isLoading true/false
 
 /**
  * The RootStore instance.

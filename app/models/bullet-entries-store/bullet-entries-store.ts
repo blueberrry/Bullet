@@ -1,4 +1,4 @@
-import { destroy, Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import { destroy, Instance, SnapshotIn, SnapshotOut, types, onSnapshot } from "mobx-state-tree"
 import { identifier } from "mobx-state-tree/dist/internal"
 import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
@@ -59,7 +59,7 @@ export const BulletEntriesStoreModel = types
   }))
   .actions((self) => ({
     addBulletEntry: ({ id = "", text = "", status = "todo" }) => {
-      // If no id passed (all entries screen), create new uid, else use id passed from day/month view
+      // If no id passed (all entries screen), create new uid, else use id passed when created in day/week/month view
       const newId = id === "" ? uuidv4() : id
       const newBulletEntry = BulletEntryModel.create({
         id: newId,
@@ -87,6 +87,9 @@ export const BulletEntriesStoreModel = types
       })
 
       return entriesFromIds
+    },
+    afterCreate() {
+      onSnapshot(self.bulletEntries, self.saveBulletEntries)
     },
   }))
 

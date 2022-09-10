@@ -16,14 +16,18 @@ export const BulletEntryModel = types
     //   types.literal("note"),
     //   types.literal("inspirationalIdeas"),
     // ),
+    // status: types.maybe(types.string),
     status: types.enumeration("status", ["todo", "done", "note", "inspirationalIdeas"]),
     text: types.optional(types.string, ""),
     dateCreated: types.optional(types.number, Date.now()), // Is this the correct type for timestamp?
   })
   .actions((self) => ({
     changeStatus: (newStatus) => {
-      // TODO: Status types
+      console.log("newstatus", newStatus)
       self.status = newStatus
+    },
+    toggleTodoStatus: () => {
+      self.status === "todo" ? (self.status = "done") : (self.status = "todo")
     },
     changeText: (newText) => {
       // TODO: Status types

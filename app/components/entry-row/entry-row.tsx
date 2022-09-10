@@ -4,6 +4,8 @@ import { TextStyle, View, ViewStyle } from "react-native"
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
 import { useStores } from "../../models"
 import { BulletEntry } from "../../models/bullet-entry/bullet-entry"
+import { Day } from "../../models/day/day"
+import { EntryDetails } from "../../models/entry-details-for-datespan/entry-details-for-datespan"
 import { AppText } from "../app-text/app-text"
 import { BulletItem } from "../bullet-item/bullet-item"
 import { EntryForm } from "../entry-form/entry-form"
@@ -15,9 +17,30 @@ import { DummySwipeBtnRow } from "../_temp/dummy-swipe-row/dummy-swiper-row"
 // TODO: types check
 export const EntryRow: FC<{
   item: BulletEntry
-  
+  itemDetails?: EntryDetails | undefined // if rendered within date view (month/day) extra details for rank and migrated
 }> = observer((props) => {
   const { item } = props
+
+  /**
+   * * render item function in parent
+   * * render itemDateDetails in parent
+   * * item.changeText from parent pass id
+   * * item.changeStatus from parent pass id
+   * * itemDateDetails.changeMigrated from parent pass id -- optional, if day view
+   * * itemDateDetails.changePriorityRanking from parent pass id -- optional, if day view
+   * * Wrap <DraggableItem> thing in parent -- if day view
+   * * Both should have swipe reveal functionality with CRUD to main store
+   * * if !dayView do not show migrate option
+   * * if dayView show migrate and rendered from DraggableFlatlist so we can sort in parent
+   * * essentially this is just a dumb component entry row with swipe CRUD actions only
+   * * all entries updates only to bullet entries store
+   * * day view updates to entries store but also manages sort and migrated
+   * * will get to getBulletEntryById(item.id) for item from day, if not found, means deleted from all entries, details should be deleted
+   * * all entries can just be passed item directly from store
+   * * possibly won't need observer if all handled in parent component
+   * * will have to think about monthlies
+   * ! important get rid of as much logic from that 'merge' hook. we can't use this because we can't run the mobX actions on the mutated data
+   **/
 
   const [editEntryFormVisible, setEditEntryFormVisible] = useState(false)
   const [animateEditEntryForm, setAnimateEditEntryForm] = useState(false)
@@ -43,12 +66,13 @@ export const EntryRow: FC<{
           <ToggleTodo
             isDone={item.status === "done"}
             onPress={() => {
-              if (item.status === "todo") {
-                item.changeStatus("done")
-              }
-              if (item.status === "done") {
-                item.changeStatus("todo") // TODO: Move toggle logic to store action
-              }
+              // if (item.status === "todo") {
+              //   item.changeStatus("done")
+              // }
+              // if (item.status === "done") {
+              //   item.changeStatus("todo") // TODO: Move toggle logic to store action
+              // }
+              item.toggleTodoStatus()
             }}
           />
         )}

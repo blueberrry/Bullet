@@ -1,10 +1,9 @@
 import React, { FC } from "react"
 import { ImageStyle, Platform, TextStyle, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import { applySnapshot, onSnapshot, getSnapshot, clone } from "mobx-state-tree"
 import { observer } from "mobx-react-lite"
-import moment from "moment"
-import "react-native-get-random-values"
-import { v4 as uuidv4 } from "uuid"
+
 import {
   BulletItem,
   Button,
@@ -17,9 +16,6 @@ import {
 import { ScrollMenu } from "../../components/scroll-menu/scroll-menu"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
-import { Api } from "../../services/api"
-import { save } from "../../utils/storage"
-import { getLatestDate } from "../../utils/date-formatting"
 import { useStores } from "../../models"
 import {
   CONTAINER,
@@ -35,6 +31,7 @@ import {
 } from "./home-screen.presets"
 import { FULL } from "../../theme/global-consts"
 import { YYYYMMDD } from "../../types/types"
+import { useFocusEffect, useIsFocused } from "@react-navigation/native"
 
 export const logoIgnite = require("./logo-ignite.png")
 export const heart = require("./heart.png")
@@ -42,29 +39,27 @@ export const heart = require("./heart.png")
 // TODO: Migrate days entries to backlog if date is older than today
 // TODO: Move styles to presets component
 
-// TODO: Data is not persisting in async storage - looks like it's overwritten when we fetch the dummy data
+// TODO: Make sure data persists in production
 
-// TODO: Sould this logic be in the `addNextDay` action?
+// !important ScrollMenu does not rerender when we update, could apply snapshot/getsnapshot be needed
 
-// TODO: Some of these views/texts with styles could be extracted to reusable components, eg Header
-
-// TODO: ScrollMenu does not rerender when we add/remove data from all entries (until rerender), probably more to do with the hooks managing data rather than mobx
-
-const platformCommand = Platform.select({
-  ios: "Cmd + D",
-  android: "Cmd/Ctrl + M",
-})
+// TODO: Remove observers from relevant dumb components
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
+    const [rerender, setRerender] = React.useState(false)
 
-    const { bulletEntriesStore, daysStore } = useStores()
+    // TODO: Why am I having to force a rerender here? Mob X should return new values from the hooks
+    const { bulletEntriesStore, daysStore } = useStores(rerender)
     const { bulletEntries } = bulletEntriesStore
     const { days } = daysStore
 
-    // TODO: Once backend completed we should fetch on mount similar to this
+    // !important this does not look correct, mst should be taking care of rerendering when bulletEntries changes
+    // TODO: Investigate, rerendering the whole context is probably expensive
+    // useFocusEffect(React.useCallback(() => setRerender((prev) => !prev), []))
 
+    // TODO: Once backend completed we should fetch on mount similar to this - use generator mobx function
     const fetchTempInitialData = () => {
       daysStore.getDays()
       bulletEntriesStore.getBulletEntries()
@@ -73,6 +68,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
     const navigateToDay = (id) => {
       navigation.navigate("dailyList", { id })
     }
+
+    // !important - hack!
+    // TODO: fix
+    useFocusEffect(React.useCallback(() => setRerender((prev) => !prev), []))
 
     return (
       <View testID="DemoScreen" style={FULL}>
@@ -89,12 +88,13 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "homeScreen">> 
           <AppText style={TAGLINE} tx="demoScreen.tagLine" />
           <BulletItem text="Daily Entries">
             <ScrollMenu
-              entries={[...days]}
+              days={days}
               datesArray={daysStore.datesArray}
               navigateToScreen={navigateToDay}
               addNextDay={daysStore.addNextDay}
               addSpecificDay={(date: YYYYMMDD) => daysStore.addSpecificDate(date)}
               removeDate={(item) => daysStore.removeDay(item)}
+              // extraData={bulletEntries}
             />
             <Button text="Get/reset initial testing state" onPress={fetchTempInitialData} />
           </BulletItem>

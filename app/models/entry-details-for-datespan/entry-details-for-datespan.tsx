@@ -1,5 +1,4 @@
 import { Instance, SnapshotIn, SnapshotOut, hasParent, types, getParent } from "mobx-state-tree"
-import { SlideInDown } from "react-native-reanimated"
 import { BulletEntryModel } from "../bullet-entry/bullet-entry"
 /**
  * * Single Date Entry Details
@@ -8,11 +7,9 @@ import { BulletEntryModel } from "../bullet-entry/bullet-entry"
 export const EntryDetailsForDateSpan = types
   .model("EntryDetailsForDateSpan")
   .props({
-    // id: types.reference(types.late(() => BulletEntryModel)),
-    id: types.maybe(types.identifier || types.string), // TODO: This should somehow reference a bulletentrymodel id
     priorityRanking: types.union(types.null, types.number),
     migrated: types.maybe(types.boolean),
-    // id: types.reference(BulletEntryModel),
+    entry: types.reference(types.late(() => BulletEntryModel)),
   })
   .actions((self) => ({
     changePriorityRanking(newRank) {
@@ -26,7 +23,7 @@ export const EntryDetailsForDateSpan = types
       // delegate to owner of wishlist item since we are changing the collection itself
       if (hasParent(self)) {
         // @ts-ignore
-        getParent(self, 2).removeEntryDetail(self) // TODO: TS not infering properties on parent?
+        getParent(self, 2).removeEntryDetail(self) // TODO: Will this remove associated bullet entry?
       }
     },
   }))

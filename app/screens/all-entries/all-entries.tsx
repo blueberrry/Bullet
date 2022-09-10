@@ -53,7 +53,6 @@ export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> 
     const goBack = () => navigation.goBack()
 
     const { bulletEntriesStore } = useStores()
-    const { bulletEntries } = bulletEntriesStore
 
     const todos = bulletEntriesStore.allTodos
     const notes = bulletEntriesStore.allNotes
@@ -101,8 +100,6 @@ export const AllEntries: FC<StackScreenProps<NavigatorParamList, "allEntries">> 
               titleStyle={HEADER_TITLE}
             />
             <AppText>{`Total entries: ${bulletEntriesStore.totalBulletEntries}`}</AppText>
-
-            {/* <DraggableBulletList entries={[...bulletEntries]} /> */}
             <Accordian title={`Todos (${todos.length})`}>
               <FlatList
                 nestedScrollEnabled
